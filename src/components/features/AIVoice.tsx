@@ -19,6 +19,7 @@ interface GeneratedAudio {
   text: string;
   voice: string;
   duration?: number;
+  browserTts?: boolean;
 }
 
 const VOICE_OPTIONS: VoiceOption[] = [
@@ -58,30 +59,56 @@ export default function AIVoice() {
     setError(null);
 
     try {
-      const res = await fetch("/api/voice/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: trimmed,
-          voice_id: selectedVoice.id,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || `Request failed (${res.status})`);
+      // Use browser's Web Speech API for TTS
+      const synth = window.speechSynthesis;
+      
+      if (!synth) {
+        throw new Error("浏览器不支持语音合成");
       }
+
+      // Create utterance
+      const utterance = new SpeechSynthesisUtterance(trimmed);
+      
+      // Map voice ID to browser voice
+      const voiceIdMap: Record<string, string> = {
+        "zh-CN-xiaoxiao": "Microsoft YaFei (zh-CN)",
+        "zh-CN-yunxi": "Microsoft Kangkang (zh-CN)",
+        "en-US-jenny": "Microsoft Zira (en-US)",
+        "en-US-eric": "Microsoft David (en-US)",
+        "ja-JP-mayu": "Microsoft Haruka (ja-JP)",
+        "ja-JP-kenta": "Microsoft Keita (ja-JP)",
+        "ko-KR-sunhi": "Microsoft Heami (ko-KR)",
+        "fr-FR-denise": "Microsoft Hortense (fr-FR)",
+        "de-DE-katja": "Microsoft Hedda (de-DE)",
+        "es-ES-elena": "Microsoft Helia (es-ES)",
+      };
+      
+      const targetVoiceName = voiceIdMap[selectedVoice.id] || voiceIdMap["zh-CN-xiaoxiao"];
+      const voices = synth.getVoices();
+      const matchedVoice = voices.find(v => v.name === targetVoiceName);
+      
+      if (matchedVoice) {
+        utterance.voice = matchedVoice;
+        utterance.lang = matchedVoice.lang;
+      }
+
+      // Estimate duration (rough calculation)
+      const estimatedDuration = trimmed.length / 5; // ~5 chars per second
 
       const newAudio: GeneratedAudio = {
         id: crypto.randomUUID(),
-        url: data.url || data.output || "",
+        url: "", // Browser TTS doesn't produce downloadable URL
         text: trimmed,
         voice: selectedVoice.name,
-        duration: data.duration,
+        duration: estimatedDuration,
+        browserTts: true,
       };
 
       setAudioList((prev) => [newAudio, ...prev]);
+
+      // Auto-play the generated speech
+      synth.speak(utterance);
+      
     } catch (err) {
       setError(err instanceof Error ? err.message : "生成失败，请重试");
     } finally {
@@ -305,10 +332,34 @@ export default function AIVoice() {
                 <div className="flex items-center gap-4">
                   {/* Play button */}
                   <button
-                    onClick={() => audio.url && new Audio(audio.url).play()}
+                    onClick={() => {
+                      if (audio.browserTts) {
+                        // Re-play using browser TTS
+                        const synth = window.speechSynthesis;
+                        if (synth) {
+                          const utterance = new SpeechSynthesisUtterance(audio.text);
+                          const voiceIdMap: Record<string, string> = {
+                            "晓晓": "Microsoft YaFei (zh-CN)",
+                            "云希": "Microsoft Kangkang (zh-CN)",
+                            "Jenny": "Microsoft Zira (en-US)",
+                            "Eric": "Microsoft David (en-US)",
+                          };
+                          const targetVoiceName = voiceIdMap[audio.voice] || voiceIdMap["晓晓"];
+                          const voices = synth.getVoices();
+                          const matchedVoice = voices.find(v => v.name === targetVoiceName);
+                          if (matchedVoice) {
+                            utterance.voice = matchedVoice;
+                            utterance.lang = matchedVoice.lang;
+                          }
+                          synth.speak(utterance);
+                        }
+                      } else if (audio.url) {
+                        new Audio(audio.url).play();
+                      }
+                    }}
                     className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors"
                   >
-                    {audio.url ? (
+                    {(audio.url || audio.browserTts) ? (
                       <Play className="w-5 h-5 text-primary fill-primary" />
                     ) : (
                       <Volume2 className="w-5 h-5 text-muted-foreground" />
