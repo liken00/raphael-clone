@@ -5,6 +5,7 @@ import {
   Plus, ChevronDown, Zap, Download, RefreshCw,
   Loader2, ImageIcon, AlertCircle, X
 } from "lucide-react";
+import { RESOLUTION_OPTIONS, Tier, DEFAULT_TIER, TIERS } from "@/lib/tiers";
 
 interface GeneratedImage {
   id: string;
@@ -13,13 +14,24 @@ interface GeneratedImage {
   model: string;
 }
 
+interface ResolutionOption {
+  width: number;
+  height: number;
+  label: string;
+  tiers: Tier[];
+}
+
 export default function ImageGenerator() {
   const [prompt, setPrompt] = useState("");
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<GeneratedImage[]>([]);
   const [selectedModel, setSelectedModel] = useState("flux-schnell");
+  const [resolution, setResolution] = useState<ResolutionOption>(RESOLUTION_OPTIONS[0]);
   const promptRef = useRef<HTMLTextAreaElement>(null);
+
+  // Mock user tier - replace with actual auth check
+  const userTier: Tier = DEFAULT_TIER;
 
   const handleGenerate = async () => {
     const trimmed = prompt.trim();
@@ -35,8 +47,8 @@ export default function ImageGenerator() {
         body: JSON.stringify({
           prompt: trimmed,
           model_id: selectedModel,
-          width: 1024,
-          height: 1024,
+          width: resolution.width,
+          height: resolution.height,
         }),
       });
 
@@ -152,12 +164,30 @@ export default function ImageGenerator() {
 
               {/* Options row */}
               <div className="flex flex-wrap gap-1.5 sm:gap-2 px-2 mt-2 sm:mt-4 pb-3">
-                <button className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm rounded-full border border-border/40 bg-secondary/10 text-secondary-foreground/80 hover:bg-secondary/90 flex items-center gap-1">
-                  <span className="inline-flex w-5 h-5 items-center justify-center">
-                    <span className="border-[1.5px] border-current rounded-[3px] bg-foreground/10 w-4 h-4" />
-                  </span>
-                  1:1
-                </button>
+                {/* Resolution selector */}
+                <div className="relative group">
+                  <button className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm rounded-full border border-border/40 bg-secondary/10 text-secondary-foreground/80 hover:bg-secondary/90 flex items-center gap-1">
+                    <span className="inline-flex w-5 h-5 items-center justify-center">
+                      <span className="border-[1.5px] border-current rounded-[3px] bg-foreground/10 w-4 h-4" />
+                    </span>
+                    {resolution.label}
+                    <ChevronDown className="w-3 h-3 opacity-60" />
+                  </button>
+                  <div className="absolute top-full left-0 mt-1 py-1 rounded-lg border border-border/60 bg-card/95 backdrop-blur-sm shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 min-w-[100px]">
+                    {RESOLUTION_OPTIONS.filter(opt => opt.tiers.includes(userTier)).map((opt) => (
+                      <button
+                        key={opt.label}
+                        onClick={() => setResolution(opt)}
+                        className={`w-full px-3 py-1.5 text-xs text-left hover:bg-primary/20 transition-colors ${resolution.label === opt.label ? 'text-primary bg-primary/10' : 'text-foreground/80'}`}
+                      >
+                        {opt.label}
+                        {opt.label === '720P' && ' (游客)'}
+                        {opt.label === '1080P' && ' (免费)'}
+                        {opt.label === '4K' && ' (会员)'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <button className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm rounded-full border border-border/30 bg-secondary/10 text-secondary-foreground/60 hover:bg-secondary/90">
                   无风格
                 </button>
