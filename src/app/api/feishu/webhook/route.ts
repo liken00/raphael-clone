@@ -82,7 +82,7 @@ async function handleMessage(event: FeishuEventCallback["event"]) {
 
   // Check if bot is mentioned (or it's a p2p chat)
   const isMentioned = message.mentions?.some(
-    (m) => m.id.open_id === "bot" || m.name === "Raphael AI",
+    (m) => m.id.open_id === "bot" || m.name === "Raphael AI" || m.name === "国龙",
   )
   if (message.chat_type === "group" && !isMentioned) {
     // In groups, only reply when @mentioned
@@ -132,10 +132,10 @@ async function handleMessage(event: FeishuEventCallback["event"]) {
     createTime: message.create_time,
   }
 
-  saveMessage(userMsg)
+  try {   saveMessage(userMsg) } catch (e) { console.error("Failed to save message:", e) }
 
   // Get recent context for AI
-  const recentMessages = getRecentContext(message.chat_id, 20)
+  let recentMessages: any[] = []; try { recentMessages = getRecentContext(message.chat_id, 20) } catch (e) { console.error("Failed to get context:", e) }
   const history = recentMessages.map((m) => ({
     role: (m.isBot ? "assistant" : "user") as "user" | "assistant",
     content: `${m.senderName}: ${m.content}`,
@@ -177,7 +177,7 @@ async function handleMessage(event: FeishuEventCallback["event"]) {
         isBot: true,
         createTime: new Date().toISOString(),
       }
-      saveMessage(botMsg)
+          try {   saveMessage(botMsg) } catch (e) { console.error("Failed to save bot message:", e) }
     }
   } catch (error) {
     console.error("Failed to send AI reply:", error)

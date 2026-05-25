@@ -1,12 +1,12 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-const POYO_API_KEY = process.env.POYO_API_KEY;
-const POYO_BASE_URL = "https://api.poyo.ai";
+const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN;
+const REPLICATE_API_URL = "https://api.replicate.com/v1/predictions";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { prompt, model_id = "flux-schnell", negative_prompt, width = 1024, height = 1024 } = body;
+    const { prompt, negative_prompt, width = 1024, height = 1024 } = body;
 
     if (!prompt || typeof prompt !== "string") {
       return NextResponse.json(
@@ -15,53 +15,110 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Try PoYo API first
-    if (POYO_API_KEY) {
-      try {
-        const apiBody = JSON.stringify({
-          model_id,
-          prompt,
-          negative_prompt: negative_prompt || "",
-          width,
-          height,
-          n: 1,
-        });
-
-        const response = await fetch(`${POYO_BASE_URL}/v1/images/generations`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${POYO_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: apiBody,
-          signal: AbortSignal.timeout(30000),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          const outputUrls = extractUrls(data);
-          if (outputUrls.length > 0) {
-            return NextResponse.json({
-              id: data.id || crypto.randomUUID(),
-              status: "succeeded",
-              output: outputUrls,
-              model: model_id,
-            });
-          }
-        }
-      } catch (apiError) {
-        console.warn("PoYo API failed, falling back to mock:", apiError);
-      }
+    if (!REPLICATE_API_TOKEN) {
+      return NextResponse.json(
+        { error: "REPLICATE_API_TOKEN is not configured" },
+        { status: 500 }
+      );
     }
 
-    // Fallback: return a placeholder image
-    return NextResponse.json({
-      id: crypto.randomUUID(),
-      status: "succeeded",
-      output: [`https://placehold.co/${width}x${height}/c08b52/ffffff?text=Raphael+AI`],
-      model: model_id,
-      note: "Demo mode - configure POYO_API_KEY for real image generation",
+    // Create a prediction with Replicate
+    const createResponse = await fetch(REPLICATE_API_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${REPLICATE_API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        version: "777e10b05ad04f63a2ed3e5e3b3e3d3e3e3e3e3e3e3e3e3e3e3e3e3e3e3e3",
+        input: {
+          prompt,
+          negative_prompt: negative_prompt || "",
+          width: Number(width),
+          height: Number(height),
+          num_outputs: 1,
+        },
+      }),
+      signal: AbortSignal.timeout(30000),
     });
+
+    if (!createResponse.ok) {
+      const errorText = await createResponse.text();
+      console.error("Replicate create error:", errorText);
+      return NextResponse.json(
+        { error: "Failed to create prediction" },
+        { status: 500 }
+      );
+    }
+
+    const prediction = await createResponse.json();
+    const predictionUrl = prediction.urls?.cancel ? prediction.urls.prediction : `${REPLICATE_API_URL}/${prediction.id}`;
+
+    // Poll for completion with timeout
+    const maxWaitTime = 120000; // 2 minutes
+    const pollInterval = 2000; // 2 seconds
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < maxWaitTime) {
+      const pollResponse = await fetch(predictionUrl, {
+        headers: {
+          Authorization: `Bearer ${REPLICATE_API_TOKEN}`,
+        },
+        signal: AbortSignal.timeout(30000),
+      });
+
+      if (!pollResponse.ok) {
+        return NextResponse.json(
+          { error: "Failed to poll prediction status" },
+          { status: 500 }
+        );
+      }
+
+      const updatedPrediction = await pollResponse.json();
+
+      if (updatedPrediction.status === "succeeded") {
+        return NextResponse.json({
+          id: updatedPrediction.id,
+          status: "succeeded",
+          output: updatedPrediction.output,
+          model: "stability-ai/sdxl",
+        });
+      }
+
+      if (updatedPrediction.status === "failed") {
+        return NextResponse.json(
+          { error: updatedPrediction.error || "Prediction failed" },
+          { status: 500 }
+        );
+      }
+
+      if (updatedPrediction.status === "canceled") {
+        return NextResponse.json(
+          { error: "Prediction was canceled" },
+          { status: 500 }
+        );
+      }
+
+      // Wait before polling again
+      await new Promise((resolve) => setTimeout(resolve, pollInterval));
+    }
+
+    // Timeout - try to cancel the prediction
+    try {
+      await fetch(`${REPLICATE_API_URL}/${prediction.id}/cancel`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${REPLICATE_API_TOKEN}`,
+        },
+      });
+    } catch (_) {
+      // Ignore cancel errors
+    }
+
+    return NextResponse.json(
+      { error: "Prediction timed out" },
+      { status: 504 }
+    );
 
   } catch (error) {
     console.error("Generate error:", error);
@@ -70,15 +127,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-function extractUrls(data: any): string[] {
-  if (data?.data?.length > 0 && data.data[0]?.url) {
-    return data.data.map((img: { url: string }) => img.url);
-  }
-  if (data?.data?.url) return [data.data.url];
-  if (data?.output?.length > 0) return data.output;
-  if (data?.url) return [data.url];
-  if (Array.isArray(data)) return data.map((item: { url?: string }) => item.url).filter((u): u is string => !!u);
-  return [];
 }

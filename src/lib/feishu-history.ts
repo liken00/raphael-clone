@@ -1,7 +1,9 @@
 ﻿import * as fs from "fs"
 import * as path from "path"
 
-const DATA_DIR = path.join(process.cwd(), "data", "feishu-history")
+const DATA_DIR = process.env.VERCEL 
+  ? path.join("/tmp", "data", "feishu-history") 
+  : path.join(process.cwd(), "data", "feishu-history")
 
 export interface ChatMessage {
   id: string
@@ -125,3 +127,4 @@ export function deleteChatHistory(chatId: string): boolean {
   }
   return false
 }
+
