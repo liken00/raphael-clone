@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN;
-const REPLICATE_API_URL = "https://api.replicate.com/v1/predictions";
+const WANXIANG_API_KEY = process.env.WANXIANG_API_KEY;
+const WANXIANG_API_URL = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis";
+const WANXIANG_TASK_URL = "https://dashscope.aliyuncs.com/api/v1/tasks";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,28 +16,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!REPLICATE_API_TOKEN) {
+    if (!WANXIANG_API_KEY) {
       return NextResponse.json(
-        { error: "REPLICATE_API_TOKEN is not configured" },
+        { error: "WANXIANG_API_KEY is not configured" },
         { status: 500 }
       );
     }
 
-    // Create a prediction with Replicate
-    const createResponse = await fetch(REPLICATE_API_URL, {
+    // Create async task with Wanxiang
+    const createResponse = await fetch(WANXIANG_API_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${REPLICATE_API_TOKEN}`,
+        Authorization: `Bearer ${WANXIANG_API_KEY}`,
         "Content-Type": "application/json",
+        "X-DashScope-Async": "enable",
       },
       body: JSON.stringify({
-        version: "777e10b05ad04f63a2ed3e5e3b3e3d3e3e3e3e3e3e3e3e3e3e3e3e3e3e3e3",
+        model: "wanx2.1-t2i-plus",
         input: {
           prompt,
-          negative_prompt: negative_prompt || "",
-          width: Number(width),
-          height: Number(height),
-          num_outputs: 1,
+          ...(negative_prompt && { negative_prompt }),
+        },
+        parameters: {
+          size: `${width}*${height}`,
+          n: 1,
         },
       }),
       signal: AbortSignal.timeout(30000),
@@ -44,57 +47,62 @@ export async function POST(request: NextRequest) {
 
     if (!createResponse.ok) {
       const errorText = await createResponse.text();
-      console.error("Replicate create error:", errorText);
+      console.error("Wanxiang create error:", errorText);
       return NextResponse.json(
-        { error: "Failed to create prediction" },
+        { error: "Failed to create Wanxiang task" },
         { status: 500 }
       );
     }
 
-    const prediction = await createResponse.json();
-    const predictionUrl = prediction.urls?.cancel ? prediction.urls.prediction : `${REPLICATE_API_URL}/${prediction.id}`;
+    const taskData = await createResponse.json();
+    const taskId = taskData.output?.task_id;
+
+    if (!taskId) {
+      console.error("Wanxiang response missing task_id:", taskData);
+      return NextResponse.json(
+        { error: "Invalid Wanxiang response" },
+        { status: 500 }
+      );
+    }
 
     // Poll for completion with timeout
     const maxWaitTime = 120000; // 2 minutes
-    const pollInterval = 2000; // 2 seconds
+    const pollInterval = 3000; // 3 seconds
     const startTime = Date.now();
 
     while (Date.now() - startTime < maxWaitTime) {
-      const pollResponse = await fetch(predictionUrl, {
+      const pollResponse = await fetch(`${WANXIANG_TASK_URL}/${taskId}`, {
         headers: {
-          Authorization: `Bearer ${REPLICATE_API_TOKEN}`,
+          Authorization: `Bearer ${WANXIANG_API_KEY}`,
+          "Content-Type": "application/json",
         },
         signal: AbortSignal.timeout(30000),
       });
 
       if (!pollResponse.ok) {
         return NextResponse.json(
-          { error: "Failed to poll prediction status" },
+          { error: "Failed to poll task status" },
           { status: 500 }
         );
       }
 
-      const updatedPrediction = await pollResponse.json();
+      const updatedTask = await pollResponse.json();
+      const taskStatus = updatedTask.output?.task_status;
 
-      if (updatedPrediction.status === "succeeded") {
+      if (taskStatus === "SUCCEEDED") {
+        const results = updatedTask.output?.results || [];
+        const imageUrls = results.map((r: { url: string }) => r.url);
         return NextResponse.json({
-          id: updatedPrediction.id,
+          id: taskId,
           status: "succeeded",
-          output: updatedPrediction.output,
-          model: "stability-ai/sdxl",
+          output: imageUrls,
+          model: "wanx2.1-t2i-plus",
         });
       }
 
-      if (updatedPrediction.status === "failed") {
+      if (taskStatus === "FAILED") {
         return NextResponse.json(
-          { error: updatedPrediction.error || "Prediction failed" },
-          { status: 500 }
-        );
-      }
-
-      if (updatedPrediction.status === "canceled") {
-        return NextResponse.json(
-          { error: "Prediction was canceled" },
+          { error: "Task failed" },
           { status: 500 }
         );
       }
@@ -103,20 +111,8 @@ export async function POST(request: NextRequest) {
       await new Promise((resolve) => setTimeout(resolve, pollInterval));
     }
 
-    // Timeout - try to cancel the prediction
-    try {
-      await fetch(`${REPLICATE_API_URL}/${prediction.id}/cancel`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${REPLICATE_API_TOKEN}`,
-        },
-      });
-    } catch (_) {
-      // Ignore cancel errors
-    }
-
     return NextResponse.json(
-      { error: "Prediction timed out" },
+      { error: "Task timed out" },
       { status: 504 }
     );
 
