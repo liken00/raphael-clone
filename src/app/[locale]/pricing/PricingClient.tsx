@@ -18,12 +18,13 @@ const plans = [
     ],
     cta: "开始使用",
     popular: false,
+    region: "all",
   },
   {
     name: "专业",
-    price: { monthly: 12, yearly: 96 },
+    price: { monthly: 4.96, yearly: 59.52 },
     credits: "每月 2,000 点数",
-    description: "适合创作者和自由职业者",
+    description: "海外专享 30 倍利润品质保证",
     features: [
       "每月 2,000 点数",
       "所有 Raphael 模型",
@@ -35,12 +36,13 @@ const plans = [
     ],
     cta: "升级到专业版",
     popular: true,
+    region: "overseas",
   },
   {
     name: "终极",
-    price: { monthly: 28, yearly: 224 },
+    price: { monthly: 9.92, yearly: 119.04 },
     credits: "每月 5,000 点数",
-    description: "适合工作室和重度用户",
+    description: "海外专享 30 倍利润品质保证",
     features: [
       "每月 5,000 点数",
       "所有 Raphael 模型",
@@ -54,6 +56,7 @@ const plans = [
     ],
     cta: "升级到终极版",
     popular: false,
+    region: "overseas",
   },
 ];
 
@@ -72,7 +75,7 @@ export default function PricingClient() {
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto">
         <div className="inline-flex items-center rounded-full border border-primary/30 px-3 py-1 text-xs font-medium bg-primary/5 text-primary">
-          定价
+          海外专享 30 倍利润品质保证
         </div>
         <h1 className="mt-4 text-3xl sm:text-5xl font-bold tracking-tight text-foreground">
           简单透明的定价
@@ -124,6 +127,11 @@ export default function PricingClient() {
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-md">
                 <Sparkles className="w-3 h-3" />
                 最受欢迎
+              </div>
+            )}
+            {plan.region === "overseas" && (
+              <div className="absolute -top-3 right-4 inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2 py-1 text-xs font-medium text-emerald-600">
+                海外专享
               </div>
             )}
             <div className="mb-6">
@@ -229,6 +237,19 @@ export default function PricingClient() {
         <button className="mt-6 inline-flex items-center rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all">
           免费开始使用
         </button>
+      </div>
+
+      {/* 国内价格 */}
+      <div className="mt-16 text-center max-w-2xl mx-auto rounded-2xl border border-amber-200 bg-amber-50/50 p-8 sm:p-12">
+        <div className="inline-flex items-center gap-1 rounded-full bg-amber-100 border border-amber-200 px-3 py-1 text-xs font-medium text-amber-700 mb-4">
+          即将推出
+        </div>
+        <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
+          国内定价
+        </h2>
+        <p className="mt-4 text-foreground/70">
+          国内区域定价方案正在筹备中，即将推出，敬请期待。
+        </p>
       </div>
     </div>
   );
