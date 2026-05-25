@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Github, Loader2 } from 'lucide-react';
+import { Globe, Loader2 } from 'lucide-react';
 
 interface GitHubLoginProps {
   onSuccess?: (user: any) => void;
@@ -41,7 +41,7 @@ export default function GitHubLogin({ onSuccess, onError }: GitHubLoginProps) {
         <Loader2 className="w-4 h-4 animate-spin" />
       ) : (
         <>
-          <Github className="w-4 h-4" />
+          <Globe className="w-4 h-4" />
           使用 GitHub 登录
         </>
       )}

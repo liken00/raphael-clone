@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Phone, Github, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Phone, Globe, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import PhoneLogin from "@/components/features/PhoneLogin";
