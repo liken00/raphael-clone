@@ -1,6 +1,6 @@
 {
   "common": {
-    "brand": "Raphael AI",
+    "brand": "MY AI",
     "tagline": "在几秒钟内创建令人惊叹的 AI 生成图像",
     "subtitle": "全球首个无限免费 AI 图像生成器",
     "nav": {
@@ -46,11 +46,11 @@
       "discover": "发现新内容"
     },
     "features": {
-      "title": "Raphael AI 图像生成器的主要特点",
-      "subtitle": "体验下一代 AI 图像生成，Raphael AI 图像生成器强大、免费且注重隐私。",
+      "title": "MY AI 图像生成器的主要特点",
+      "subtitle": "体验下一代 AI 图像生成，MY AI 图像生成器强大、免费且注重隐私。",
       "free": {
         "title": "零成本创作",
-        "desc": "Raphael AI 图像生成器是世界上第一个完全免费的 AI 图像生成器，没有生成次数限制或注册要求。"
+        "desc": "MY AI 图像生成器是世界上第一个完全免费的 AI 图像生成器，没有生成次数限制或注册要求。"
       },
       "quality": {
         "title": "最先进的质量",
@@ -74,7 +74,7 @@
       }
     },
     "footer": {
-      "description": "Raphael AI 图像生成器：免费无限的 AI 图像生成器，聚合 Nano Banana 2 / Pro、Qwen-Image 和 Seedream 5.0 等顶尖模型。",
+      "description": "MY AI 图像生成器：免费无限的 AI 图像生成器，聚合 Nano Banana 2 / Pro、Qwen-Image 和 Seedream 5.0 等顶尖模型。",
       "about": "关于",
       "features": "功能",
       "pricing": "定价",
@@ -83,7 +83,7 @@
       "aiEditor": "AI 图像编辑器",
       "uncrop": "扩展图像",
       "aiLipsync": "AI 对口型视频",
-      "copyright": " Raphael AI 版权所有。",
+      "copyright": " MY AI 版权所有。",
       "privacy": "隐私政策",
       "tos": "服务条款"
     },
@@ -102,31 +102,31 @@
     },
     "advanced": {
       "badge": "高级功能",
-      "title": "Raphael AI 图像生成器的先进功能",
-      "subtitle": "体验 Raphael AI 图像生成器与 AI Image Editor 带来的强大创作能力",
+      "title": "MY AI 图像生成器的先进功能",
+      "subtitle": "体验 MY AI 图像生成器与 AI Image Editor 带来的强大创作能力",
       "speed": {
         "label": "闪电般快速的生成",
         "full": "闪电般快速的生成",
         "tag": "速度",
-        "desc": "Raphael AI 图像生成器采用先进的图像生成引擎，以出色速度创建专业级图像。适合快速原型设计和创意工作流程。"
+        "desc": "MY AI 图像生成器采用先进的图像生成引擎，以出色速度创建专业级图像。适合快速原型设计和创意工作流程。"
       },
       "control": {
         "label": "精确的创意控制",
         "full": "精确的创意控制",
         "tag": "AI Image Editor 技术",
-        "desc": "Raphael AI 图像生成器的独家 AI Image Editor 功能为您提供了前所未有的输出控制能力。以专业的精度微调风格、构图和元素。"
+        "desc": "MY AI 图像生成器的独家 AI Image Editor 功能为您提供了前所未有的输出控制能力。以专业的精度微调风格、构图和元素。"
       },
       "style": {
         "label": "多功能风格引擎",
         "full": "多功能风格引擎",
         "tag": "创意自由",
-        "desc": "Raphael AI 图像生成器支持各种创意方向。无论您需要照片级渲染还是艺术插图，我们的平台都能提供卓越结果。"
+        "desc": "MY AI 图像生成器支持各种创意方向。无论您需要照片级渲染还是艺术插图，我们的平台都能提供卓越结果。"
       }
     },
     "testimonials": {
       "badge": "用户评价",
-      "title": "用户对 Raphael AI 的评价",
-      "subtitle": "看看创作者如何使用 Raphael AI 和 AI Image Editor 提高生产力",
+      "title": "用户对 MY AI 的评价",
+      "subtitle": "看看创作者如何使用 MY AI 和 AI Image Editor 提高生产力",
       "ratingPrefix": "基于 25,017+ 位用户评分，平均 4.9/5 分。"
     },
     "faq": {

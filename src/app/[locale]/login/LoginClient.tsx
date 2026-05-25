@@ -72,7 +72,7 @@ export default function LoginClient() {
             <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
               R
             </div>
-            <span className="text-2xl font-bold text-foreground">Raphael AI</span>
+            <span className="text-2xl font-bold text-foreground">MY AI</span>
           </Link>
         </div>
 
@@ -84,7 +84,7 @@ export default function LoginClient() {
             </h1>
             <p className="mt-2 text-sm text-foreground/60">
               {mode === "login"
-                ? "登录以继续使用 Raphael AI"
+                ? "登录以继续使用 MY AI"
                 : mode === "register"
                 ? "注册以开始免费生成图像"
                 : "输入您的电子邮件以接收重置链接"}

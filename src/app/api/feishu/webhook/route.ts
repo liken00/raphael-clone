@@ -82,7 +82,7 @@ async function handleMessage(event: FeishuEventCallback["event"]) {
 
   // Check if bot is mentioned (or it's a p2p chat)
   const isMentioned = message.mentions?.some(
-    (m) => m.id.open_id === "bot" || m.name === "Raphael AI" || m.name === "国龙",
+    (m) => m.id.open_id === "bot" || m.name === "MY AI" || m.name === "国龙",
   )
   if (message.chat_type === "group" && !isMentioned) {
     // In groups, only reply when @mentioned
@@ -171,7 +171,7 @@ async function handleMessage(event: FeishuEventCallback["event"]) {
         chatId: message.chat_id,
         chatName,
         senderId: "bot",
-        senderName: "Raphael AI",
+        senderName: "MY AI",
         content: reply,
         messageType: "text",
         isBot: true,

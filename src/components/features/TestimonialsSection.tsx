@@ -1,16 +1,16 @@
 ﻿const testimonials = [
   {
-    text: "Raphael AI 图像生成器将我的创作效率提高了 10 倍！图像质量超乎想象，完全满足商业要求。",
+    text: "MY AI 图像生成器将我的创作效率提高了 10 倍！图像质量超乎想象，完全满足商业要求。",
     name: "Sophie Miller",
     role: "自由职业设计师",
   },
   {
-    text: "借助 AI Image Editor 功能，我可以精确控制每一个细节。Raphael AI 是市场上最强大的 AI 图像生成器！",
+    text: "借助 AI Image Editor 功能，我可以精确控制每一个细节。MY AI 是市场上最强大的 AI 图像生成器！",
     name: "Michael Chen",
     role: "创意总监",
   },
   {
-    text: "作为一名电子商务经理，Raphael AI 图像生成器帮助我快速生成产品展示图片，生成效果比其他 AI 工具好得多！",
+    text: "作为一名电子商务经理，MY AI 图像生成器帮助我快速生成产品展示图片，生成效果比其他 AI 工具好得多！",
     name: "Sarah Wang",
     role: "电子商务经理",
   },
@@ -18,17 +18,17 @@
 
 const testimonials2 = [
   {
-    text: "AI Image Editor 让我能够保持品牌风格的一致性。Raphael AI 图像生成器真正理解我的需求。",
+    text: "AI Image Editor 让我能够保持品牌风格的一致性。MY AI 图像生成器真正理解我的需求。",
     name: "David Liu",
     role: "品牌设计师",
   },
   {
-    text: "Raphael AI 图像生成器的速度令人惊叹！几秒钟内生成专业质量的图像，大大缩短了项目周期。",
+    text: "MY AI 图像生成器的速度令人惊叹！几秒钟内生成专业质量的图像，大大缩短了项目周期。",
     name: "Emma Zhang",
     role: "内容创作者",
   },
   {
-    text: "它的细节表现无与伦比。作为一名游戏开发者，Raphael AI 图像生成器已成为我们概念设计的首选工具。",
+    text: "它的细节表现无与伦比。作为一名游戏开发者，MY AI 图像生成器已成为我们概念设计的首选工具。",
     name: "Kevin Wu",
     role: "游戏概念艺术家",
   },
@@ -36,17 +36,17 @@ const testimonials2 = [
 
 const testimonials3 = [
   {
-    text: "我尝试了很多工具，但 Raphael AI 图像生成器及其 AI Image Editor 功能确实改变了游戏规则！",
+    text: "我尝试了很多工具，但 MY AI 图像生成器及其 AI Image Editor 功能确实改变了游戏规则！",
     name: "Jessica Li",
     role: "数字营销专家",
   },
   {
-    text: "Raphael AI 图像生成器让广告创意落地变得非常简单。它生成的图像达到了商业摄影标准。",
+    text: "MY AI 图像生成器让广告创意落地变得非常简单。它生成的图像达到了商业摄影标准。",
     name: "Tom Anderson",
     role: "广告创意总监",
   },
   {
-    text: "作为一名独立开发者，Raphael AI 的 API 集成非常友好。它是市场上最好的 AI 图像生成器解决方案！",
+    text: "作为一名独立开发者，MY AI 的 API 集成非常友好。它是市场上最好的 AI 图像生成器解决方案！",
     name: "Nina Patel",
     role: "全栈开发人员",
   },
@@ -80,10 +80,10 @@ export default function TestimonialsSection() {
             </div>
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mt-6 text-foreground">
-            用户对 Raphael AI 的评价
+            用户对 MY AI 的评价
           </h2>
           <p className="text-lg mt-6 text-foreground/80 leading-relaxed">
-            看看创作者如何使用 Raphael AI 和 AI Image Editor 提高生产力
+            看看创作者如何使用 MY AI 和 AI Image Editor 提高生产力
           </p>
           <p className="text-sm mt-3 text-foreground/60 font-medium">
             基于 25,017+ 位用户评分，平均 4.9/5 分。

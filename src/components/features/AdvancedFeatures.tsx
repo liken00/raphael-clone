@@ -10,7 +10,7 @@ const tabs = [
     label: "闪电般快速的生成",
     title: "闪电般快速的生成",
     tag: "速度",
-    desc: "Raphael AI 图像生成器采用先进的图像生成引擎，以出色速度创建专业级图像。非常适合快速原型设计和创意工作流程，它能在几秒钟内生成令人惊艳的视觉效果，同时保持卓越质量。",
+    desc: "MY AI 图像生成器采用先进的图像生成引擎，以出色速度创建专业级图像。非常适合快速原型设计和创意工作流程，它能在几秒钟内生成令人惊艳的视觉效果，同时保持卓越质量。",
   },
   {
     id: "control",
@@ -18,7 +18,7 @@ const tabs = [
     label: "精确的创意控制",
     title: "精确的创意控制",
     tag: "AI Image Editor 技术",
-    desc: "Raphael AI 图像生成器的独家 AI Image Editor 功能为您提供了前所未有的输出控制能力。以专业的精度微调风格、构图和元素，同时在创意项目中保持一致性。",
+    desc: "MY AI 图像生成器的独家 AI Image Editor 功能为您提供了前所未有的输出控制能力。以专业的精度微调风格、构图和元素，同时在创意项目中保持一致性。",
   },
   {
     id: "style",
@@ -26,7 +26,7 @@ const tabs = [
     label: "多功能风格引擎",
     title: "多功能风格引擎",
     tag: "创意自由",
-    desc: "Raphael AI 图像生成器支持各种创意方向。无论您需要照片级渲染还是艺术插图，我们的平台都能提供卓越结果。",
+    desc: "MY AI 图像生成器支持各种创意方向。无论您需要照片级渲染还是艺术插图，我们的平台都能提供卓越结果。",
   },
 ];
 
@@ -42,10 +42,10 @@ export default function AdvancedFeatures() {
           </span>
         </div>
         <h2 className="mx-auto mt-4 max-w-4xl text-center text-3xl font-bold md:text-4xl tracking-tight text-foreground">
-          Raphael AI 图像生成器的先进功能
+          MY AI 图像生成器的先进功能
         </h2>
         <p className="mx-auto mt-6 max-w-4xl text-center text-foreground/80 text-lg">
-          体验 Raphael AI 图像生成器与 AI Image Editor 带来的强大创作能力
+          体验 MY AI 图像生成器与 AI Image Editor 带来的强大创作能力
         </p>
 
         {/* Tabs */}
@@ -87,7 +87,7 @@ export default function AdvancedFeatures() {
                     href="/zh"
                     className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 transition-colors"
                   >
-                    Try Raphael AI
+                    Try MY AI
                   </a>
                 </div>
               </div>

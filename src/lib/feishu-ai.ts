@@ -18,7 +18,7 @@ export async function generateAiReply(params: AiReplyParams): Promise<string | n
   }
 
   // Build system prompt
-  const systemPrompt = `你是 Raphael AI 助手，被集成在飞书群聊中为用户提供帮助。
+  const systemPrompt = `你是 MY AI 助手，被集成在飞书群聊中为用户提供帮助。
 
 ## 你的角色
 - 你是一个有用、友好、专业的 AI 助手

@@ -12,10 +12,10 @@ export default function Footer() {
                   <div className="w-11 h-11 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
                     R
                   </div>
-                  <p className="text-3xl font-semibold">Raphael AI</p>
+                  <p className="text-3xl font-semibold">MY AI</p>
                 </div>
                 <p className="mt-6 text-md text-muted-foreground">
-                  Raphael AI 图像生成器：免费无限的 AI 图像生成器，聚合 Nano Banana 2 / Pro、Qwen-Image 和 Seedream 5.0 等顶尖模型。无需注册，无次数限制。
+                  MY AI 图像生成器：免费无限的 AI 图像生成器，聚合 Nano Banana 2 / Pro、Qwen-Image 和 Seedream 5.0 等顶尖模型。无需注册，无次数限制。
                 </p>
               </div>
             </div>
@@ -53,7 +53,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="mt-8 flex flex-col justify-between gap-4 border-t border-border pt-8 text-center text-sm font-medium text-muted-foreground lg:flex-row lg:items-center lg:text-left">
-            <p>2025 Raphael AI 版权所有。</p>
+            <p>2025 MY AI 版权所有。</p>
             <ul className="flex justify-center gap-4 lg:justify-start">
               <li className="hover:text-primary">
                 <Link href="/privacy">隐私政策</Link>

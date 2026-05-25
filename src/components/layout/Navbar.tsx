@@ -67,7 +67,7 @@ export default function Navbar() {
                 R
               </div>
               <span className="text-xl text-primary font-bold">
-                Raphael AI
+                MY AI
               </span>
             </Link>
             <div className="flex items-center gap-1">
@@ -205,7 +205,7 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
               R
             </div>
-            <span className="text-xl font-bold">Raphael AI</span>
+            <span className="text-xl font-bold">MY AI</span>
           </div>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}

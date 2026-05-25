@@ -141,7 +141,7 @@ export default function AIVoice() {
                     <div className="relative flex-1 flex flex-col">
                       <textarea
                         id="voice-generator-text"
-                        placeholder="输入配音文本，例如：欢迎使用Raphael AI智能体，您的创意伙伴..."
+                        placeholder="输入配音文本，例如：欢迎使用MY AI智能体，您的创意伙伴..."
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         className="w-full bg-transparent focus:outline-none mb-2 text-foreground resize-none text-base placeholder:text-base placeholder:text-muted-foreground/60 overflow-y-auto min-h-[62px] sm:min-h-[72px] flex-1 pt-0"
