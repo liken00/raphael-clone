@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  ChevronDown, Mic, Loader2, AlertCircle, X, Download, Volume2
+  ChevronDown, Mic, Loader2, AlertCircle, X, Download, Volume2, Play
 } from "lucide-react";
 
 interface VoiceOption {
