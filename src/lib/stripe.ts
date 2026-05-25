@@ -11,7 +11,7 @@ export const PLANS = {
     priceIdYearly: process.env.STRIPE_PRO_PRICE_YEARLY || "",
     credits: 2000,
     priceMonthly: 4.96, // 成本 × 31（通义万相 API ¥0.16 × 31 ≈ ¥4.96）
-    priceYearly: 59.52,
+    priceYearly: 99, // 海外基础会员 $99/年
   },
   ultimate: {
     name: "Ultimate",

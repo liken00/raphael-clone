@@ -22,7 +22,7 @@ const plans = [
   },
   {
     name: "专业",
-    price: { monthly: 4.96, yearly: 59.52 },
+    price: { monthly: 4.96, yearly: 99 },
     credits: "每月 2,000 点数",
     description: "海外专享 30 倍利润品质保证",
     features: [
