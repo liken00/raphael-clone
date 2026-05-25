@@ -1,0 +1,138 @@
+﻿{
+  "common": {
+    "brand": "Raphael AI",
+    "tagline": "在几秒钟内创建令人惊叹的 AI 生成图像",
+    "subtitle": "全球首个无限免费 AI 图像生成器",
+    "nav": {
+      "nanoBanana": "Nano Banana 2",
+      "nanoBananaBadge": "50%折扣",
+      "aiEditor": "AI 图像编辑器",
+      "aiVideo": "AI 视频生成器",
+      "aiVideoBadge": "NEW",
+      "pricing": "定价",
+      "aiTools": "AI 工具",
+      "uncrop": "扩展图像",
+      "bgRemover": "移除背景",
+      "login": "登录"
+    },
+    "hero": {
+      "badgeFree": "100% 免费",
+      "badgePowered": "由 Nano Banana 提供支持",
+      "badgeLogin": "无需登录",
+      "badgeUnlimited": "无限生成"
+    },
+    "generator": {
+      "title": "AI 图像生成器",
+      "promptPlaceholder": "描述您想生成的图像...",
+      "langHint": "🇬🇧 为获得最佳效果，请输入英文提示词",
+      "uploadLabel": "上传参考图",
+      "aspectRatio": "1:1",
+      "style": "无风格",
+      "color": "无色彩",
+      "lighting": "无光照",
+      "composition": "无构图",
+      "modelLabel": "Raphael Basic",
+      "fastMode": "快速模式",
+      "negativePrompt": "负面提示词",
+      "generate": "生成",
+      "free": "Free",
+      "clear": "清除",
+      "random": "随机"
+    },
+    "gallery": {
+      "title": "获取灵感",
+      "subtitle": "从 Raphael 的创作中获取灵感",
+      "tryStyle": "尝试一种风格",
+      "discover": "发现新内容"
+    },
+    "features": {
+      "title": "Raphael AI 图像生成器的主要特点",
+      "subtitle": "体验下一代 AI 图像生成，Raphael AI 图像生成器强大、免费且注重隐私。",
+      "free": {
+        "title": "零成本创作",
+        "desc": "Raphael AI 图像生成器是世界上第一个完全免费的 AI 图像生成器，没有生成次数限制或注册要求。"
+      },
+      "quality": {
+        "title": "最先进的质量",
+        "desc": "场景感知智能路由会选择当前最合适的模型，提供具有卓越细节和风格控制的照片级图像。"
+      },
+      "text": {
+        "title": "高级文本理解",
+        "desc": "卓越的文本到图像功能，能够准确解释复杂的提示和文本叠加功能。"
+      },
+      "speed": {
+        "title": "闪电般快速的生成",
+        "desc": "优化的推理管道确保在不影响质量的情况下快速生成图像。"
+      },
+      "privacy": {
+        "title": "增强的隐私保护",
+        "desc": "未登录请求通常仅作临时处理；登录后仅保存提供服务所必需的信息。"
+      },
+      "style": {
+        "title": "多风格支持",
+        "desc": "可以创建各种艺术风格的图像，从照片级真实感、动漫、油画到数字艺术。"
+      }
+    },
+    "footer": {
+      "description": "Raphael AI 图像生成器：免费无限的 AI 图像生成器，聚合 Nano Banana 2 / Pro、Qwen-Image 和 Seedream 5.0 等顶尖模型。",
+      "about": "关于",
+      "features": "功能",
+      "pricing": "定价",
+      "partners": "合作伙伴",
+      "tools": "工具",
+      "aiEditor": "AI 图像编辑器",
+      "uncrop": "扩展图像",
+      "aiLipsync": "AI 对口型视频",
+      "copyright": " Raphael AI 版权所有。",
+      "privacy": "隐私政策",
+      "tos": "服务条款"
+    },
+    "stats": {
+      "title": "深受数百万人信赖",
+      "subtitle": "加入全球最大的免费 AI 图像生成器社区",
+      "users": "活跃用户",
+      "usersValue": "3M+",
+      "usersLabel": "月活跃用户",
+      "images": "创建的图像",
+      "imagesValue": "1,530",
+      "imagesLabel": "每分钟生成的图像数",
+      "rating": "用户评分",
+      "ratingValue": "4.9",
+      "ratingLabel": "平均图像质量得分"
+    },
+    "advanced": {
+      "badge": "高级功能",
+      "title": "Raphael AI 图像生成器的先进功能",
+      "subtitle": "体验 Raphael AI 图像生成器与 AI Image Editor 带来的强大创作能力",
+      "speed": {
+        "label": "闪电般快速的生成",
+        "full": "闪电般快速的生成",
+        "tag": "速度",
+        "desc": "Raphael AI 图像生成器采用先进的图像生成引擎，以出色速度创建专业级图像。适合快速原型设计和创意工作流程。"
+      },
+      "control": {
+        "label": "精确的创意控制",
+        "full": "精确的创意控制",
+        "tag": "AI Image Editor 技术",
+        "desc": "Raphael AI 图像生成器的独家 AI Image Editor 功能为您提供了前所未有的输出控制能力。以专业的精度微调风格、构图和元素。"
+      },
+      "style": {
+        "label": "多功能风格引擎",
+        "full": "多功能风格引擎",
+        "tag": "创意自由",
+        "desc": "Raphael AI 图像生成器支持各种创意方向。无论您需要照片级渲染还是艺术插图，我们的平台都能提供卓越结果。"
+      }
+    },
+    "testimonials": {
+      "badge": "用户评价",
+      "title": "用户对 Raphael AI 的评价",
+      "subtitle": "看看创作者如何使用 Raphael AI 和 AI Image Editor 提高生产力",
+      "ratingPrefix": "基于 25,017+ 位用户评分，平均 4.9/5 分。"
+    },
+    "faq": {
+      "badge": "常见问题",
+      "title": "常见问题",
+      "contact": "还有其他问题吗？请通过 support@raphael.app 联系我们"
+    }
+  }
+}

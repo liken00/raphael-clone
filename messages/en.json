@@ -1,0 +1,138 @@
+﻿{
+  "common": {
+    "brand": "Raphael AI",
+    "tagline": "Create stunning AI-generated images in seconds",
+    "subtitle": "The world's first unlimited free AI image generator",
+    "nav": {
+      "nanoBanana": "Nano Banana 2",
+      "nanoBananaBadge": "50% OFF",
+      "aiEditor": "AI Image Editor",
+      "aiVideo": "AI Video Generator",
+      "aiVideoBadge": "NEW",
+      "pricing": "Pricing",
+      "aiTools": "AI Tools",
+      "uncrop": "Uncrop Image",
+      "bgRemover": "Remove Background",
+      "login": "Log In"
+    },
+    "hero": {
+      "badgeFree": "100% Free",
+      "badgePowered": "Powered by Nano Banana",
+      "badgeLogin": "No Login Required",
+      "badgeUnlimited": "Unlimited Generation"
+    },
+    "generator": {
+      "title": "AI Image Generator",
+      "promptPlaceholder": "Describe the image you want to generate...",
+      "langHint": "🇬🇧 For best results, use English prompts",
+      "uploadLabel": "Upload reference image",
+      "aspectRatio": "1:1",
+      "style": "No style",
+      "color": "No color",
+      "lighting": "No lighting",
+      "composition": "No composition",
+      "modelLabel": "Raphael Basic",
+      "fastMode": "Fast Mode",
+      "negativePrompt": "Negative Prompt",
+      "generate": "Generate",
+      "free": "Free",
+      "clear": "Clear",
+      "random": "Random"
+    },
+    "gallery": {
+      "title": "Get Inspired",
+      "subtitle": "Get inspired by Raphael's creations",
+      "tryStyle": "Try a Style",
+      "discover": "Discover"
+    },
+    "features": {
+      "title": "Key Features of Raphael AI Image Generator",
+      "subtitle": "Experience next-gen AI image generation that's powerful, free, and privacy-focused.",
+      "free": {
+        "title": "Zero-Cost Creation",
+        "desc": "Raphael AI is the world's first completely free AI image generator with no generation limits or registration required."
+      },
+      "quality": {
+        "title": "State-of-the-Art Quality",
+        "desc": "Scene-aware intelligent routing selects the best model to deliver photorealistic images with exceptional detail and style control."
+      },
+      "text": {
+        "title": "Advanced Text Understanding",
+        "desc": "Superior text-to-image capabilities that accurately interpret complex prompts and text overlay requests."
+      },
+      "speed": {
+        "title": "Lightning-Fast Generation",
+        "desc": "Optimized inference pipelines ensure fast image generation without compromising quality."
+      },
+      "privacy": {
+        "title": "Enhanced Privacy Protection",
+        "desc": "Minimal data collection: unlogged requests are processed temporarily; logged-in data is kept only as needed."
+      },
+      "style": {
+        "title": "Multi-Style Support",
+        "desc": "Create images in various artistic styles from photorealistic and anime to oil painting and digital art."
+      }
+    },
+    "footer": {
+      "description": "Raphael AI Image Generator: A free, unlimited AI image generator aggregating top models like Nano Banana 2 / Pro, Qwen-Image, and Seedream 5.0.",
+      "about": "About",
+      "features": "Features",
+      "pricing": "Pricing",
+      "partners": "Partners",
+      "tools": "Tools",
+      "aiEditor": "AI Image Editor",
+      "uncrop": "Uncrop Image",
+      "aiLipsync": "AI Lip Sync Video",
+      "copyright": " Raphael AI. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "tos": "Terms of Service"
+    },
+    "stats": {
+      "title": "Trusted by Millions",
+      "subtitle": "Join the world's largest free AI image generator community",
+      "users": "Active Users",
+      "usersValue": "3M+",
+      "usersLabel": "Monthly Active Users",
+      "images": "Images Created",
+      "imagesValue": "1,530",
+      "imagesLabel": "Images Generated Per Minute",
+      "rating": "Rating",
+      "ratingValue": "4.9",
+      "ratingLabel": "Average Quality Score"
+    },
+    "advanced": {
+      "badge": "Advanced Features",
+      "title": "Advanced Features of Raphael AI Image Generator",
+      "subtitle": "Experience the powerful creative capabilities of Raphael AI with AI Image Editor",
+      "speed": {
+        "label": "Lightning-Fast Generation",
+        "full": "Lightning-Fast Generation",
+        "tag": "Speed",
+        "desc": "Raphael AI uses advanced generation engines to create professional-grade images at exceptional speed. Perfect for rapid prototyping and creative workflows."
+      },
+      "control": {
+        "label": "Precise Creative Control",
+        "full": "Precise Creative Control",
+        "tag": "AI Image Editor Tech",
+        "desc": "The exclusive AI Image Editor feature gives you unprecedented control over output. Fine-tune style, composition, and elements with professional precision."
+      },
+      "style": {
+        "label": "Versatile Style Engine",
+        "full": "Versatile Style Engine",
+        "tag": "Creative Freedom",
+        "desc": "Raphael AI supports a wide range of creative directions. Whether you need photorealistic renders or artistic illustrations, our platform delivers."
+      }
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "title": "What Users Say About Raphael AI",
+      "subtitle": "See how creators boost productivity with Raphael AI and AI Image Editor",
+      "ratingPrefix": "Based on 25,017+ ratings with an average of 4.9/5."
+    },
+    "faq": {
+      "badge": "FAQ",
+      "title": "Frequently Asked Questions",
+      "contact": "Still have questions? Contact us at support@raphael.app"
+    }
+  }
+}
