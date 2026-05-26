@@ -2,8 +2,7 @@
 
 import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "@/components/layout/Navbar";
-import HeroSection from "@/components/features/HeroSection";
-import ImageGenerator from "@/components/features/ImageGenerator";
+import ImageGeneratorCard from "@/components/features/ImageGenerator";
 import Footer from "@/components/layout/Footer";
 
 export default function HomePage() {
@@ -23,7 +22,7 @@ export default function HomePage() {
               将文字描述转换为精美的图像
             </p>
           </div>
-          <ImageGenerator />
+          <ImageGeneratorCard />
         </main>
         <Footer />
       </div>
