@@ -114,7 +114,8 @@ export default function VideoGenerator() {
 
       const newVideo: GeneratedVideo = {
         id: crypto.randomUUID(),
-        url: data.url || data.output || "",
+        // Support multiple response formats: data.url, data.output, or nested video_url
+        url: data.url || data.output || data.video_url || "",
         prompt: trimmed,
         plan: plan.name,
         duration: parseInt(plan.duration) || 5,
