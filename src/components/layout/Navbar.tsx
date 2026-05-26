@@ -226,10 +226,12 @@ export default function Navbar() {
         {/* Mobile nav */}
         <div className="flex lg:hidden items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
-              R
-            </div>
-            <span className="text-xl font-bold">MY AI</span>
+            <Link href="/zh" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
+                R
+              </div>
+              <span className="text-xl font-bold">MY AI</span>
+            </Link>
           </div>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -238,6 +240,62 @@ export default function Navbar() {
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
+
+        {/* Mobile menu */}
+        {mobileOpen && (
+          <div className="lg:hidden mt-4 pb-4 border-t border-border pt-4">
+            <div className="flex flex-col space-y-2">
+              {navItems.map((item, i) => (
+                <div key={i}>
+                  {"children" in item ? (
+                    <div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setAiMenuOpen(!aiMenuOpen);
+                        }}
+                        className="flex items-center justify-between w-full px-4 py-3 text-sm font-medium rounded-lg hover:bg-accent transition-colors"
+                      >
+                        <span>{item.title}</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform ${aiMenuOpen ? "rotate-180" : ""}`} />
+                      </button>
+                      {aiMenuOpen && (
+                        <div className="pl-4 mt-1 space-y-1">
+                          {"children" in item && item.children!.map((child, j) => (
+                            <Link
+                              key={j}
+                              href={child.href}
+                              onClick={() => {
+                                setAiMenuOpen(false);
+                                setMobileOpen(false);
+                              }}
+                              className="block px-4 py-2 text-sm rounded-lg hover:bg-accent transition-colors"
+                            >
+                              {child.title}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg hover:bg-accent transition-colors"
+                    >
+                      <span>{item.title}</span>
+                      {"badge" in item && item.badge && (
+                        <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-amber-500/10 text-amber-500">
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
