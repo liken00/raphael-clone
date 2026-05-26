@@ -4,6 +4,13 @@ const WANXIANG_API_KEY = process.env.WANXIANG_API_KEY;
 const WANXIANG_API_URL = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis";
 const WANXIANG_TASK_URL = "https://dashscope.aliyuncs.com/api/v1/tasks";
 
+// Debug helper - in production, remove or disable this
+function debugLog(msg: string, ...args: unknown[]) {
+  if (process.env.NODE_ENV === "development") {
+    console.debug(`[Wanxiang Debug] ${msg}`, ...args);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -16,12 +23,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check API key with detailed error message
     if (!WANXIANG_API_KEY) {
+      debugLog("WANXIANG_API_KEY is not set. Available env vars:", Object.keys(process.env).filter(k => k.includes("WANXIANG") || k.includes("API")));
       return NextResponse.json(
-        { error: "WANXIANG_API_KEY is not configured" },
+        { error: "WANXIANG_API_KEY is not configured. Please set the WANXIANG_API_KEY environment variable in Vercel project settings." },
         { status: 500 }
       );
     }
+
+    debugLog("API key found, starting image generation with prompt:", prompt);
 
     // Create async task with Wanxiang
     const createResponse = await fetch(WANXIANG_API_URL, {

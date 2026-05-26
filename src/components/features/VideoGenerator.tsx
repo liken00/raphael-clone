@@ -2,14 +2,55 @@
 
 import { useState } from "react";
 import {
-  ChevronDown, Video, Loader2, AlertCircle, X, Play, Download
+  ChevronDown, Video, Loader2, AlertCircle, X, Play, Download, Sparkles, Shuffle, Clock, Zap
 } from "lucide-react";
+
+// Video pricing tiers
+const VIDEO_PLANS = [
+  {
+    id: "basic",
+    name: "Raphael Video",
+    tier: "基础",
+    resolution: "480P-720P",
+    duration: "5秒",
+    time: "~1分钟",
+    credits: "5+ credits",
+    badge: null,
+  },
+  {
+    id: "plus",
+    name: "Raphael Video Plus",
+    tier: "进阶",
+    resolution: "480P-720P",
+    duration: "4-12秒",
+    time: "~2分钟",
+    credits: "25+ credits",
+    badge: "热门",
+  },
+  {
+    id: "pro",
+    name: "Raphael Video Pro",
+    tier: "专业",
+    resolution: "480P-720P",
+    duration: "4-12秒",
+    time: "~3分钟",
+    credits: "60+ credits",
+    badge: "高端",
+  },
+];
+
+// Random prompt suggestions
+const RANDOM_PROMPTS = [
+  "A serene sunset over the ocean, waves gently rolling, golden hour lighting, cinematic composition, ultra realistic...",
+  "A bustling city street at night, neon signs reflecting on wet pavement, people walking by, cyberpunk atmosphere...",
+  "A magical forest with floating particles, soft volumetric light streaming through the canopy, enchanted atmosphere...",
+];
 
 interface GeneratedVideo {
   id: string;
   url: string;
   prompt: string;
-  resolution: string;
+  plan: string;
   duration: number;
 }
 
@@ -18,10 +59,8 @@ export default function VideoGenerator() {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [videos, setVideos] = useState<GeneratedVideo[]>([]);
-  const [resolution, setResolution] = useState<"720p" | "1080p" | "4k">("720p");
-  const [duration, setDuration] = useState<10 | 15>(10);
-  const [showResolutionMenu, setShowResolutionMenu] = useState(false);
-  const [showDurationMenu, setShowDurationMenu] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string>("plus");
+  const [showPlanMenu, setShowPlanMenu] = useState(false);
 
   const handleGenerate = async () => {
     const trimmed = prompt.trim();
@@ -30,14 +69,15 @@ export default function VideoGenerator() {
     setGenerating(true);
     setError(null);
 
+    const plan = VIDEO_PLANS.find(p => p.id === selectedPlan) || VIDEO_PLANS[1];
+
     try {
       const res = await fetch("/api/video/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: trimmed,
-          resolution,
-          duration,
+          plan: selectedPlan,
         }),
       });
 
@@ -51,8 +91,8 @@ export default function VideoGenerator() {
         id: crypto.randomUUID(),
         url: data.url || data.output || "",
         prompt: trimmed,
-        resolution,
-        duration,
+        plan: plan.name,
+        duration: parseInt(plan.duration),
       };
 
       setVideos((prev) => [newVideo, ...prev]);
@@ -61,6 +101,11 @@ export default function VideoGenerator() {
     } finally {
       setGenerating(false);
     }
+  };
+
+  const handleRandomPrompt = () => {
+    const randomPrompt = RANDOM_PROMPTS[Math.floor(Math.random() * RANDOM_PROMPTS.length)];
+    setPrompt(randomPrompt);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -90,10 +135,12 @@ export default function VideoGenerator() {
     setError(null);
   };
 
-  const resolutionLabels = {
-    "720p": "720P (未登录)",
-    "1080p": "1080P (登录)",
-    "4k": "4K (会员)",
+  const currentPlan = VIDEO_PLANS.find(p => p.id === selectedPlan) || VIDEO_PLANS[1];
+
+  const planLabels = {
+    "basic": "Raphael Video (基础)",
+    "plus": "Raphael Video Plus (进阶)",
+    "pro": "Raphael Video Pro (专业)",
   };
 
   return (
@@ -143,11 +190,15 @@ export default function VideoGenerator() {
                 </div>
               </div>
 
-              {/* Options row */}
+              {/* Random prompt suggestions */}
               <div className="flex flex-wrap gap-1.5 sm:gap-2 px-2 mt-2 sm:mt-4 pb-3">
-                <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm rounded-full border border-border/30 bg-secondary/10 text-secondary-foreground/60">
-                  🎥 视频生成
-                </span>
+                <button
+                  onClick={handleRandomPrompt}
+                  className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm rounded-full border border-border/30 bg-secondary/10 text-secondary-foreground/60 hover:bg-secondary/30 hover:text-secondary-foreground/80 transition-all flex items-center gap-1"
+                >
+                  <Shuffle className="w-3 h-3" />
+                  随机提示词
+                </button>
                 <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm rounded-full border border-border/30 bg-secondary/10 text-secondary-foreground/60">
                   ✨ 默认风格
                 </span>
@@ -157,56 +208,46 @@ export default function VideoGenerator() {
             {/* Bottom action bar */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
               <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 w-full md:w-auto">
-                {/* Resolution selector */}
+                {/* Plan selector */}
                 <div className="relative w-full md:w-auto">
                   <button
-                    onClick={() => setShowResolutionMenu(!showResolutionMenu)}
-                    className="flex h-10 w-full min-w-[208px] items-center justify-between rounded-full border border-primary/18 bg-primary/10 px-3 text-sm font-medium text-primary outline-none transition-all duration-200 hover:bg-primary/18 md:w-[224px]"
+                    onClick={() => setShowPlanMenu(!showPlanMenu)}
+                    className="flex h-10 w-full min-w-[240px] items-center justify-between rounded-full border border-primary/18 bg-primary/10 px-3 text-sm font-medium text-primary outline-none transition-all duration-200 hover:bg-primary/18 md:w-[280px]"
                   >
                     <span className="flex min-w-0 items-center gap-2.5">
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/30">
-                        <span className="text-[10px] font-bold text-primary">R</span>
+                        <Sparkles className="h-4 w-4 text-primary" />
                       </span>
-                      <span className="min-w-0 truncate">{resolutionLabels[resolution]}</span>
+                      <span className="min-w-0 truncate">{planLabels[selectedPlan as keyof typeof planLabels]}</span>
                     </span>
                     <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
                   </button>
-                  {showResolutionMenu && (
+                  {showPlanMenu && (
                     <div className="absolute z-10 mt-2 w-full rounded-xl border border-border/40 bg-card shadow-lg overflow-hidden">
-                      {(["720p", "1080p", "4k"] as const).map((res) => (
+                      {VIDEO_PLANS.map((plan) => (
                         <button
-                          key={res}
-                          onClick={() => { setResolution(res); setShowResolutionMenu(false); }}
-                          className={`w-full px-4 py-2.5 text-left text-sm hover:bg-secondary/50 ${resolution === res ? "text-primary font-medium" : "text-foreground"}`}
+                          key={plan.id}
+                          onClick={() => { setSelectedPlan(plan.id); setShowPlanMenu(false); }}
+                          className={`w-full px-4 py-3 text-left hover:bg-secondary/50 ${selectedPlan === plan.id ? "text-primary font-medium bg-primary/5" : "text-foreground"}`}
                         >
-                          {resolutionLabels[res]}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Duration selector */}
-                <div className="relative w-full md:w-auto">
-                  <button
-                    onClick={() => setShowDurationMenu(!showDurationMenu)}
-                    className="flex h-10 w-full min-w-[160px] items-center justify-between rounded-full border border-border/40 bg-secondary/10 px-3 text-sm text-secondary-foreground outline-none transition-all duration-200 hover:bg-secondary/30 md:w-[180px]"
-                  >
-                    <span className="flex min-w-0 items-center gap-2">
-                      <span>⏱️</span>
-                      <span className="min-w-0 truncate">{duration}秒</span>
-                    </span>
-                    <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
-                  </button>
-                  {showDurationMenu && (
-                    <div className="absolute z-10 mt-2 w-full rounded-xl border border-border/40 bg-card shadow-lg overflow-hidden">
-                      {([10, 15] as const).map((dur) => (
-                        <button
-                          key={dur}
-                          onClick={() => { setDuration(dur); setShowDurationMenu(false); }}
-                          className={`w-full px-4 py-2.5 text-left text-sm hover:bg-secondary/50 ${duration === dur ? "text-primary font-medium" : "text-foreground"}`}
-                        >
-                          {dur}秒 {dur === 10 ? "(未登录)" : "(登录)"}
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium">{plan.name}</span>
+                                {plan.badge && (
+                                  <span className={`inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                                    plan.badge === "热门" ? "bg-amber-500/20 text-amber-400" : "bg-purple-500/20 text-purple-400"
+                                  }`}>
+                                    {plan.badge}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-0.5">
+                                {plan.resolution} · {plan.duration} · {plan.time}
+                              </div>
+                            </div>
+                            <span className="text-xs text-muted-foreground">{plan.credits}</span>
+                          </div>
                         </button>
                       ))}
                     </div>
@@ -237,7 +278,7 @@ export default function VideoGenerator() {
                     <div className="flex items-center justify-center gap-2">
                       生成视频
                       <span className="inline-flex px-1.5 py-0.5 rounded-full text-xs font-medium bg-amber-500 text-white">
-                        Free
+                        {currentPlan.credits}
                       </span>
                     </div>
                   )}
@@ -301,7 +342,7 @@ export default function VideoGenerator() {
                 {/* Info overlay */}
                 <div className="absolute top-2 left-2 right-2 flex items-center justify-between">
                   <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium bg-black/50 text-white/80 backdrop-blur-sm">
-                    {video.resolution} • {video.duration}秒
+                    {video.plan} · {video.duration}秒
                   </span>
                   {video.url && (
                     <button
