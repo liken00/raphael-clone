@@ -1,70 +1,36 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 
 export default function Footer() {
   return (
-    <section className="py-16">
-      <div className="max-w-7xl mx-auto px-8">
-        <footer>
-          <div className="flex flex-col items-center lg:items-start justify-between gap-10 text-center lg:flex-row lg:text-left">
-            <div className="flex max-w-96 shrink flex-col items-center justify-between gap-6 lg:items-start">
-              <div>
-                <div className="flex items-center justify-center gap-2 lg:justify-start">
-                  <div className="w-11 h-11 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
-                    R
-                  </div>
-                  <p className="text-3xl font-semibold">MY AI</p>
-                </div>
-                <p className="mt-6 text-md text-muted-foreground">
-                  MY AI 图像生成器：免费无限的 AI 图像生成器，聚合 Nano Banana 2 / Pro、Qwen-Image 和 Seedream 5.0 等顶尖模型。无需注册，无次数限制。
-                </p>
-              </div>
+    <footer className="py-12 border-t border-zinc-800/50 mt-20">
+      <div className="max-w-5xl mx-auto px-4">
+        <div className="flex flex-col items-center justify-between gap-8 text-center lg:flex-row lg:text-left">
+          {/* Brand */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-bold text-sm">
+              M
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-x-12 lg:gap-y-0 lg:ml-auto">
-              <div className="text-center lg:text-left">
-                <div className="mb-6 font-bold">关于</div>
-                <ul className="space-y-4 text-sm text-muted-foreground">
-                  <li className="font-medium hover:text-primary">
-                    <Link href="/zh#feature">功能</Link>
-                  </li>
-                  <li className="font-medium hover:text-primary">
-                    <Link href="/zh/pricing">定价</Link>
-                  </li>
-                  <li className="font-medium hover:text-primary">
-                    <Link href="/zh/partners">合作伙伴</Link>
-                  </li>
-                </ul>
-              </div>
-              <div className="text-center lg:text-left">
-                <div className="mb-6 font-bold">工具</div>
-                <ul className="space-y-4 text-sm text-muted-foreground">
-                  <li className="font-medium hover:text-primary">
-                    <Link href="/zh/ai-image-editor">AI 图像编辑器</Link>
-                  </li>
-                  <li className="font-medium hover:text-primary">
-                    <Link href="/zh/uncrop">扩展图像</Link>
-                  </li>
-                  <li className="font-medium hover:text-primary">
-                    <a href="https://fameo.ai" target="_blank" rel="noopener noreferrer">
-                      AI 对口型视频
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <p className="text-2xl font-bold text-white">MY AI</p>
           </div>
-          <div className="mt-8 flex flex-col justify-between gap-4 border-t border-border pt-8 text-center text-sm font-medium text-muted-foreground lg:flex-row lg:items-center lg:text-left">
-            <p>2025 MY AI 版权所有。</p>
-            <ul className="flex justify-center gap-4 lg:justify-start">
-              <li className="hover:text-primary">
-                <Link href="/privacy">隐私政策</Link>
-              </li>
-              <li className="hover:text-primary">
-                <Link href="/tos">服务条款</Link>
-              </li>
-            </ul>
+
+          {/* Links */}
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-zinc-500">
+            <Link href="/zh/privacy" className="hover:text-amber-400 transition-colors">
+              隐私政策
+            </Link>
+            <Link href="/zh/tos" className="hover:text-amber-400 transition-colors">
+              服务条款
+            </Link>
+            <Link href="/zh/partners" className="hover:text-amber-400 transition-colors">
+              合作伙伴
+            </Link>
           </div>
-        </footer>
+        </div>
+
+        <div className="mt-8 text-center text-sm text-zinc-600">
+          © 2025 MY AI 版权所有。
+        </div>
       </div>
-    </section>
+    </footer>
   );
 }
