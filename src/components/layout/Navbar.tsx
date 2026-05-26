@@ -91,7 +91,7 @@ export default function Navbar() {
                       </button>
                       {aiMenuOpen && (
                         <div className="absolute left-0 top-full mt-1 w-48 rounded-xl border border-border/40 bg-card/95 backdrop-blur-sm shadow-lg p-2 z-50">
-                          {"children" in item && item.children.map((child, j) => (
+                          {"children" in item && item.children!.map((child, j) => (
                             <Link
                               key={j}
                               href={child.href}
