@@ -3,15 +3,15 @@ import { NextResponse } from "next/server";
 // Voice generation using Web Speech API
 // For production, replace with a real TTS API like ElevenLabs, Azure, or阿里云语音合成
 
-interface VoiceConfig {
-  "zh-CN"?: string;
-  "en-US"?: string;
-  "ja-JP"?: string;
-  "ko-KR"?: string;
-  "fr-FR"?: string;
-  "de-DE"?: string;
-  "es-ES"?: string;
-}
+type VoiceConfig = {
+  'zh-CN'?: string;
+  'en-US'?: string;
+  'ja-JP'?: string;
+  'ko-KR'?: string;
+  'fr-FR'?: string;
+  'de-DE'?: string;
+  'es-ES'?: string;
+};
 
 // Map frontend voice IDs to Web Speech API voice names
 const VOICE_MAP: Record<string, { lang: string; name?: string }> = {
