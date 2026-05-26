@@ -1,4 +1,4 @@
-﻿const testimonials = [
+const testimonials = [
   {
     text: "MY AI 图像生成器将我的创作效率提高了 10 倍！图像质量超乎想象，完全满足商业要求。",
     name: "Sophie Miller",

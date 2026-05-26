@@ -1,4 +1,4 @@
-﻿export default function FeaturesSection() {
+export default function FeaturesSection() {
   const features = [
     {
       icon: "💰",

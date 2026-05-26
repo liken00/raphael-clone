@@ -1,4 +1,4 @@
-﻿import PricingClient from "./PricingClient";
+import PricingClient from "./PricingClient";
 
 export const metadata = {
   title: "定价 - MY AI",

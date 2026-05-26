@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { generateVerificationCode, verificationCodeStore, resend } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {

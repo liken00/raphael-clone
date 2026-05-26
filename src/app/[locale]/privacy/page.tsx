@@ -1,4 +1,4 @@
-﻿export default function PrivacyPage() {
+export default function PrivacyPage() {
   return (
     <div className="container mx-auto px-4 py-16 max-w-3xl">
       <h1 className="text-3xl sm:text-4xl font-bold mb-8">隐私政策</h1>

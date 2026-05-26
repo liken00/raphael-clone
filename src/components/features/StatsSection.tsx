@@ -1,4 +1,4 @@
-﻿export default function StatsSection() {
+export default function StatsSection() {
   return (
     <section id="统计数据" className="py-16">
       <div className="container mx-auto px-4 flex flex-col items-center gap-4">

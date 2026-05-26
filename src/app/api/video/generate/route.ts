@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const WANXIANG_API_KEY = process.env.WANXIANG_API_KEY || "";
 const WANXIANG_TASK_URL = "https://dashscope.aliyuncs.com/api/v1/tasks";

@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { verificationCodeStore } from "@/lib/auth";
 
 // In-memory user store (in production, use a database)

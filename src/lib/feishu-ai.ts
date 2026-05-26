@@ -1,4 +1,4 @@
-﻿export interface AiReplyParams {
+export interface AiReplyParams {
   chatId: string
   chatName?: string
   message: string

@@ -1,4 +1,4 @@
-﻿import LoginClient from "./LoginClient";
+import LoginClient from "./LoginClient";
 
 export const metadata = {
   title: "登录 - MY AI",
