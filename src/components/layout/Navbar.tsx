@@ -27,16 +27,20 @@ const navItems = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [aiMenuOpen, setAiMenuOpen] = useState(false);
   const { user, isAuthenticated, isLoading, tierConfig } = useAuth();
 
-  // Close user menu when clicking outside
+  // Close menus when clicking outside
   useEffect(() => {
-    const handleClick = () => setUserMenuOpen(false);
-    if (userMenuOpen) {
+    const handleClick = () => {
+      setUserMenuOpen(false);
+      setAiMenuOpen(false);
+    };
+    if (userMenuOpen || aiMenuOpen) {
       document.addEventListener("click", handleClick);
       return () => document.removeEventListener("click", handleClick);
     }
-  }, [userMenuOpen]);
+  }, [userMenuOpen, aiMenuOpen]);
 
   // Handle auth callback redirect with user data
   useEffect(() => {
@@ -75,10 +79,30 @@ export default function Navbar() {
                 <div key={i} className="relative group">
                   {"children" in item ? (
                     <>
-                      <button className="text-muted-foreground hover:text-accent-foreground inline-flex items-center gap-1 h-10 px-4 py-2 text-sm font-medium rounded-md transition-colors">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setAiMenuOpen(!aiMenuOpen);
+                        }}
+                        className="text-muted-foreground hover:text-accent-foreground inline-flex items-center gap-1 h-10 px-4 py-2 text-sm font-medium rounded-md transition-colors"
+                      >
                         <span>{item.title}</span>
                         <ChevronDown className="h-3 w-3" />
                       </button>
+                      {aiMenuOpen && (
+                        <div className="absolute left-0 top-full mt-1 w-48 rounded-xl border border-border/40 bg-card/95 backdrop-blur-sm shadow-lg p-2 z-50">
+                          {"children" in item && item.children.map((child, j) => (
+                            <Link
+                              key={j}
+                              href={child.href}
+                              onClick={() => setAiMenuOpen(false)}
+                              className="flex items-center px-3 py-2 text-sm rounded-lg hover:bg-accent transition-colors"
+                            >
+                              {child.title}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </>
                   ) : (
                     <Link
