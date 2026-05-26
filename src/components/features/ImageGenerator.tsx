@@ -7,6 +7,7 @@ import {
   Layers, UserCheck
 } from "lucide-react";
 import { RESOLUTION_OPTIONS, Tier, DEFAULT_TIER, TIERS } from "@/lib/tiers";
+import { IMAGE_MODELS, getModelById } from "@/lib/models";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface GeneratedImage {
@@ -29,7 +30,8 @@ export default function ImageGenerator() {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<GeneratedImage[]>([]);
-  const [selectedModel, setSelectedModel] = useState("flux-schnell");
+  const [selectedModel, setSelectedModel] = useState("nano-banana-2");
+  const [showModelDropdown, setShowModelDropdown] = useState(false);
   const [resolution, setResolution] = useState<ResolutionOption>(RESOLUTION_OPTIONS[0]);
   const [showNegativePrompt, setShowNegativePrompt] = useState(false);
   const [negativePrompt, setNegativePrompt] = useState("");
@@ -37,6 +39,9 @@ export default function ImageGenerator() {
   const [remainingQuota, setRemainingQuota] = useState(10);
   const [isSlowMode, setIsSlowMode] = useState(false);
   const promptRef = useRef<HTMLTextAreaElement>(null);
+
+  // Get current model info
+  const currentModel = getModelById(selectedModel) || IMAGE_MODELS[0];
 
   // Check if user needs watermark (non-members)
   const needsWatermark = tierConfig.watermark;
@@ -241,15 +246,44 @@ export default function ImageGenerator() {
               <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 w-full md:w-auto">
                 {/* Model selector */}
                 <div className="relative w-full md:w-auto">
-                  <button className="flex h-10 w-full min-w-[208px] items-center justify-between rounded-full border border-primary/18 bg-primary/10 px-3 text-sm font-medium text-primary outline-none transition-all duration-200 hover:bg-primary/18 md:w-[224px]">
+                  <button
+                    onClick={() => setShowModelDropdown(!showModelDropdown)}
+                    className="flex h-10 w-full min-w-[208px] items-center justify-between rounded-full border border-primary/18 bg-primary/10 px-3 text-sm font-medium text-primary outline-none transition-all duration-200 hover:bg-primary/18 md:w-[224px]"
+                  >
                     <span className="flex min-w-0 items-center gap-2.5">
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/30">
-                        <span className="text-[10px] font-bold text-primary">M</span>
+                        <span className="text-[10px] font-bold text-primary">{currentModel.name.charAt(0)}</span>
                       </span>
-                      <span className="min-w-0 truncate">MY AI Basic</span>
+                      <span className="min-w-0 truncate">{currentModel.name}</span>
                     </span>
                     <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
                   </button>
+                  {/* Model dropdown */}
+                  {showModelDropdown && (
+                    <div className="absolute top-full left-0 mt-1 py-1 rounded-lg border border-border/60 bg-card/95 backdrop-blur-sm shadow-xl z-20 min-w-[240px]">
+                      {IMAGE_MODELS.map((model) => (
+                        <button
+                          key={model.id}
+                          onClick={() => {
+                            setSelectedModel(model.id);
+                            setShowModelDropdown(false);
+                          }}
+                          className={`w-full px-3 py-2 text-left hover:bg-primary/20 transition-colors flex items-center gap-2 ${selectedModel === model.id ? 'text-primary bg-primary/10' : 'text-foreground/80'}`}
+                        >
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/30">
+                            <span className="text-[10px] font-bold text-primary">{model.name.charAt(0)}</span>
+                          </span>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-sm truncate">{model.name}</span>
+                            <span className="text-xs text-muted-foreground truncate">{model.description}</span>
+                          </div>
+                          {model.tier === 'PRO' && (
+                            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">PRO</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Toggles */}
