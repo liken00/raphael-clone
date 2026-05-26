@@ -5,34 +5,17 @@ import {
   ChevronDown, Image, Loader2, AlertCircle, X, Sparkles, Shuffle, Zap
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { IMAGE_MODELS } from "@/lib/models";
 
-// Image pricing tiers
-const IMAGE_PLANS = [
-  {
-    id: "basic",
-    name: "MY AI Image",
-    tier: "基础",
-    resolution: "1024*1024",
-    credits: "1 credit",
-    badge: null,
-  },
-  {
-    id: "plus",
-    name: "MY AI Image Plus",
-    tier: "进阶",
-    resolution: "1024*1024",
-    credits: "5 credits",
-    badge: "热门",
-  },
-  {
-    id: "pro",
-    name: "MY AI Image Pro",
-    tier: "专业",
-    resolution: "1024*1024",
-    credits: "10 credits",
-    badge: "高端",
-  },
-];
+// Image pricing tiers - 使用实际模型配置
+const IMAGE_PLANS = IMAGE_MODELS.filter(m => m.type === 'image').map(model => ({
+  id: model.id,
+  name: model.name,
+  tier: model.tier === 'PRO' ? 'PRO' : '免费',
+  resolution: model.id === 'nano-banana-pro' ? '4K' : '1080P',
+  credits: model.tier === 'PRO' ? 'PRO' : '免费',
+  badge: model.tier === 'PRO' ? '付费专享' : null,
+}));
 
 // Random prompt suggestions
 const RANDOM_PROMPTS = [
@@ -152,11 +135,9 @@ export default function ImageGenerator() {
 
   const currentPlan = IMAGE_PLANS.find(p => p.id === selectedPlan) || IMAGE_PLANS[0];
 
-  const planLabels = {
-    "basic": "MY AI Image (基础)",
-    "plus": "MY AI Image Plus (进阶)",
-    "pro": "MY AI Image Pro (专业)",
-  };
+  const planLabels = Object.fromEntries(
+    IMAGE_PLANS.map(p => [p.id, `${p.name} (${p.tier})`])
+  );
 
   return (
     <div className="space-y-8">

@@ -5,58 +5,41 @@ import { Check, Sparkles } from "lucide-react";
 
 const plans = [
   {
-    name: "免费",
+    name: "免费版",
     price: { monthly: 0, yearly: 0 },
-    credits: "每日 10 点数",
+    credits: "无限免费生成",
     description: "适合初次尝试 AI 图像生成",
     features: [
-      "每日 10 次生成",
-      "MY AI Basic 模型",
-      "标准队列",
-      "基础分辨率",
-      "社区许可",
+      "无限免费生成",
+      "Z-Image / Flux 2 / Qwen-Image / Seedream 5.0 / Nano Banana 2.0",
+      "普通生成速度，需排队",
+      "基础分辨率 1080P",
+      "图片底部水印",
+      "偶尔文字乱码",
+      "不可商用",
     ],
     cta: "开始使用",
     popular: false,
     region: "all",
   },
   {
-    name: "专业",
-    price: { monthly: 4.96, yearly: 99 },
-    credits: "每月 2,000 点数",
-    description: "海外专享 30 倍利润品质保证",
+    name: "付费会员",
+    price: { monthly: 12, yearly: 120 },
+    credits: "解锁全部高级功能",
+    description: "解锁 Nano Banana Pro 4K专业模型",
     features: [
-      "每月 2,000 点数",
-      "所有 MY AI 模型",
-      "优先队列",
-      "高清分辨率",
-      "商业许可",
+      "无限免费生成",
+      "解锁 Nano Banana Pro（4K超清）",
+      "极速生成，优先队列",
+      "最高分辨率 4K",
       "无水印",
-      "优先邮件支持",
+      "超清晰文字生成不乱码",
+      "可商业使用",
+      "多图融合 / 局部重绘",
     ],
-    cta: "升级到专业版",
+    cta: "升级到付费会员",
     popular: true,
-    region: "overseas",
-  },
-  {
-    name: "终极",
-    price: { monthly: 9.92, yearly: 119.04 },
-    credits: "每月 5,000 点数",
-    description: "海外专享 30 倍利润品质保证",
-    features: [
-      "每月 5,000 点数",
-      "所有 MY AI 模型",
-      "最快渲染队列",
-      "最高分辨率",
-      "商业许可",
-      "无水印",
-      "优先邮件支持",
-      "AI 图像编辑器",
-      "API 访问权限",
-    ],
-    cta: "升级到终极版",
-    popular: false,
-    region: "overseas",
+    region: "all",
   },
 ];
 
@@ -85,9 +68,9 @@ const handleCheckout = async (planName: string, interval: string) => {
 };
 
 const faqItems = [
-  { q: "可以随时取消或更改套餐吗？", a: "是的，您可以随时取消订阅或更改套餐。取消后，点数将在当前计费周期结束时过期。" },
-  { q: "未使用的点数会累积到下一月吗？", a: "点数仅限当月使用，不会结转到下个月。我们建议选择适合您使用量的套餐。" },
-  { q: "免费用户有功能限制吗？", a: "免费用户每天获得 10 点数，可使用 MY AI Basic 模型。升级后可解锁更多模型、更高分辨率和优先队列。" },
+  { q: "可以随时取消或更改套餐吗？", a: "是的，您可以随时取消订阅或更改套餐。" },
+  { q: "付费会员有哪些专属模型？", a: "付费会员可解锁 Nano Banana Pro（Gemini 3 Pro Image），支持 4K 超清分辨率、多语言文字清晰不乱码、商用授权。" },
+  { q: "免费版有哪些模型可以使用？", a: "免费版可使用：Z-Image（二次元）、Flux 2（写实）、Qwen-Image（中文）、Seedream 5.0（场景）、Nano Banana 2.0（极速）。" },
   { q: "如何获取退款？", a: "如果您对服务不满意，可以在购买后 7 天内联系 support@myai.app 申请全额退款。" },
 ];
 
@@ -105,7 +88,7 @@ export default function PricingClient() {
           简单透明的定价
         </h1>
         <p className="mt-4 text-lg text-foreground/70">
-          从免费开始，成长时再升级。所有套餐均包含核心 AI 图像生成功能。
+          全部免费使用，升级解锁 4K 商用专业功能。所有套餐均包含核心 AI 图像生成功能。
         </p>
       </div>
 
@@ -206,28 +189,23 @@ export default function PricingClient() {
             <thead>
               <tr className="border-b border-border/40">
                 <th className="text-left py-4 px-4 text-foreground font-semibold">功能</th>
-                <th className="text-center py-4 px-4 text-foreground font-semibold">免费</th>
-                <th className="text-center py-4 px-4 text-primary font-semibold">专业</th>
-                <th className="text-center py-4 px-4 text-foreground font-semibold">终极</th>
+                <th className="text-center py-4 px-4 text-foreground font-semibold">免费版</th>
+                <th className="text-center py-4 px-4 text-primary font-semibold">付费会员</th>
               </tr>
             </thead>
             <tbody>
               {[
-                ["月生成量", "300", "2,000", "5,000"],
-                ["可用模型", "MY AI Basic", "所有模型", "所有模型"],
-                ["渲染队列", "标准", "优先", "最快"],
-                ["分辨率", "基础", "高清", "最高"],
-                ["水印", "有", "无", "无"],
-                ["商业许可", "否", "是", "是"],
-                ["AI 图像编辑器", "—", "—", "✓"],
-                ["API 访问", "—", "—", "✓"],
-                ["邮件支持", "—", "优先", "优先"],
+                ["可用模型", "Z-Image / Flux 2 / Qwen-Image / Seedream 5.0 / Nano Banana 2.0", "全部模型 + Nano Banana Pro"],
+                ["生成速度", "普通，需排队", "极速，优先队列"],
+                ["最高分辨率", "1080P", "4K 超清"],
+                ["水印", "底部水印", "无"],
+                ["文字生成", "偶尔乱码", "超清晰不乱码"],
+                ["商用授权", "不可", "可商业使用"],
               ].map((row, i) => (
                 <tr key={i} className="border-b border-border/20 hover:bg-foreground/[0.02]">
                   <td className="py-3 px-4 text-foreground/80">{row[0]}</td>
                   <td className="py-3 px-4 text-center text-foreground/60">{row[1]}</td>
-                  <td className="py-3 px-4 text-center text-foreground/80">{row[2]}</td>
-                  <td className="py-3 px-4 text-center text-foreground/80">{row[3]}</td>
+                  <td className="py-3 px-4 text-center text-primary font-medium">{row[2]}</td>
                 </tr>
               ))}
             </tbody>
@@ -253,10 +231,10 @@ export default function PricingClient() {
       {/* CTA */}
       <div className="mt-24 text-center max-w-2xl mx-auto rounded-2xl border border-primary/20 bg-primary/5 p-8 sm:p-12">
         <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
-          还不确定？
+          无限免费，升级解锁专业功能
         </h2>
         <p className="mt-4 text-foreground/70">
-          从免费套餐开始体验，无需信用卡。每天 10 点数，零成本探索 AI 图像生成。
+          从免费套餐开始体验，所有基础模型无限使用。升级后解锁 Nano Banana Pro 4K 商用专业功能。
         </p>
         <button className="mt-6 inline-flex items-center rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all">
           免费开始使用
