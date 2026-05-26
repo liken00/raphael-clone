@@ -1,0 +1,20 @@
+
+> raphael-clone@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://172.30.107.117:3001
+- Environments: .env.local
+✓ Ready in 9.4s
+⚠ turbopack.root should be absolute, using: /mnt/c/Users/Administrator/Desktop/raphael-clone
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          22270
+- Dir:          /mnt/c/Users/Administrator/Desktop/raphael-clone
+- Log:          .next/dev/logs/next-development.log
+
+Run kill 22270 to stop it.
+[?25h
