@@ -9,7 +9,7 @@ const WANXIANG_TASK_URL = "https://dashscope.aliyuncs.com/api/v1/tasks";
 const FAST_MODE_DAILY_QUOTA = 10;
 
 // Guest users get slow mode (minimum wait time in ms)
-const GUEST_MIN_WAIT = 5000; // 5 seconds slow mode
+const GUEST_MIN_WAIT = 3000; // 3 seconds slow mode for guests
 
 function getTodayDate() {
   return new Date().toISOString().split('T')[0];
@@ -48,6 +48,24 @@ async function getUserQuotaFromCookies(): Promise<UserQuota> {
   return { date: today, fastCount: 0 };
 }
 
+// Save quota to cookies
+async function saveQuotaToCookies(quota: UserQuota): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set('_myai_quota', JSON.stringify(quota), {
+    maxAge: 60 * 60 * 24, // 1 day
+    path: '/',
+    httpOnly: false, // Allow client-side access
+    sameSite: 'lax',
+  });
+}
+
+// Check if user is logged in by checking for session cookie
+async function isUserLoggedIn(): Promise<boolean> {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get('next-auth.session-token') || cookieStore.get('session-token');
+  return !!sessionCookie;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -68,18 +86,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check fast mode quota
+    // Check fast mode quota and login status
     const quota = await getUserQuotaFromCookies();
     const hasQuota = quota.fastCount < FAST_MODE_DAILY_QUOTA;
-    const isGuest = !request.headers.get('x-user-id');
+    const loggedIn = await isUserLoggedIn();
+    const isGuest = !loggedIn;
 
     // Apply slow mode for guests or when fast mode quota exceeded
     const shouldSlow = isGuest || (fastMode && !hasQuota);
     
     // For guest users, apply minimum wait time to simulate queue
-    if (isGuest && !fastMode) {
-      debugLog(`Guest user - applying slow mode (${GUEST_MIN_WAIT}ms wait)`);
+    if (shouldSlow) {
+      debugLog(`Slow mode active - guest: ${isGuest}, fastMode: ${fastMode}, hasQuota: ${hasQuota}, wait: ${GUEST_MIN_WAIT}ms`);
       await new Promise(resolve => setTimeout(resolve, GUEST_MIN_WAIT));
+    }
+
+    // Track fast mode usage
+    let newQuota = quota;
+    if (fastMode && !isGuest) {
+      newQuota = { date: quota.date, fastCount: quota.fastCount + 1 };
+      await saveQuotaToCookies(newQuota);
     }
 
     debugLog("API key found, starting image generation with prompt:", prompt);
@@ -160,8 +186,9 @@ export async function POST(request: NextRequest) {
           model: "wanx2.1-t2i-plus",
           // Include quota info in response
           fastModeUsed: fastMode,
-          remainingQuota: Math.max(0, FAST_MODE_DAILY_QUOTA - quota.fastCount - (fastMode ? 1 : 0)),
+          remainingQuota: Math.max(0, FAST_MODE_DAILY_QUOTA - newQuota.fastCount),
           isSlowMode: shouldSlow,
+          isGuest: isGuest,
         });
       }
 

@@ -1,4 +1,4 @@
-﻿'use client';
+﻿﻿'use client';
 
 import { useState, useRef, useEffect } from "react";
 import {
@@ -88,6 +88,21 @@ export default function ImageGenerator() {
       }));
 
       setImages((prev) => [...newImages, ...prev]);
+      // Save images to history if logged in
+      if (user?.id) {
+        for (const img of newImages) {
+          fetch('/api/images', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              url: img.url,
+              prompt: img.prompt,
+              model: img.model,
+              userId: user.id,
+            }),
+          }).catch(() => {});
+        }
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "生成失败，请重试");
     } finally {

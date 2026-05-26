@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   ChevronDown, Video, Loader2, AlertCircle, X, Play, Download, Sparkles, Shuffle, Clock, Zap
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Video pricing tiers
 const VIDEO_PLANS = [
@@ -55,12 +56,18 @@ interface GeneratedVideo {
 }
 
 export default function VideoGenerator() {
+  const { user, tier, tierConfig } = useAuth();
   const [prompt, setPrompt] = useState("");
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [videos, setVideos] = useState<GeneratedVideo[]>([]);
   const [selectedPlan, setSelectedPlan] = useState<string>("plus");
   const [showPlanMenu, setShowPlanMenu] = useState(false);
+  const [isSlowMode, setIsSlowMode] = useState(false);
+
+  // Check user status
+  const isLoggedIn = !!user;
+  const needsWatermark = tierConfig.watermark;
 
   const handleGenerate = async () => {
     const trimmed = prompt.trim();
@@ -87,12 +94,30 @@ export default function VideoGenerator() {
         throw new Error(data.error || `Request failed (${res.status})`);
       }
 
+      // Update slow mode status from response
+      if (data.isSlowMode !== undefined) {
+        setIsSlowMode(data.isSlowMode);
+      }
+
+      // Handle pending/development status
+      if (data.status === "pending" || !data.url) {
+        const newVideo: GeneratedVideo = {
+          id: crypto.randomUUID(),
+          url: "",
+          prompt: trimmed,
+          plan: plan.name,
+          duration: parseInt(plan.duration) || 5,
+        };
+        setVideos((prev) => [newVideo, ...prev]);
+        return;
+      }
+
       const newVideo: GeneratedVideo = {
         id: crypto.randomUUID(),
         url: data.url || data.output || "",
         prompt: trimmed,
         plan: plan.name,
-        duration: parseInt(plan.duration),
+        duration: parseInt(plan.duration) || 5,
       };
 
       setVideos((prev) => [newVideo, ...prev]);
@@ -304,12 +329,35 @@ export default function VideoGenerator() {
       {videos.length > 0 && (
         <div className="w-full mx-auto">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-foreground">
-              生成结果
-              <span className="ml-2 text-sm font-normal text-muted-foreground">
-                ({videos.length} 个)
-              </span>
-            </h3>
+            <div className="flex items-center gap-3">
+              <h3 className="text-lg font-semibold text-foreground">
+                生成结果
+                <span className="ml-2 text-sm font-normal text-muted-foreground">
+                  ({videos.length} 个)
+                </span>
+              </h3>
+              {/* Login speed badge */}
+              {!isLoggedIn && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                  <Zap className="w-3 h-3" />
+                  登录以获得更快速度
+                </span>
+              )}
+              {/* Watermark badge for non-members */}
+              {needsWatermark && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                  <span className="w-2 h-2 rounded-full bg-blue-400" />
+                  已应用水印
+                </span>
+              )}
+              {/* Slow mode badge */}
+              {isSlowMode && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                  慢速模式
+                </span>
+              )}
+            </div>
             <button
               onClick={clearAll}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"

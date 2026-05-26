@@ -1,10 +1,22 @@
-import { NextResponse } from "next/server";
-import { replicate } from "@/lib/replicate";
+import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 // Video generation using Replicate API
 // Model: minimax-ai/hi16-video (or similar available model)
 
-export async function POST(request: Request) {
+const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN;
+
+// Guest users get slow mode (minimum wait time in ms)
+const GUEST_MIN_WAIT = 3000; // 3 seconds slow mode for guests
+
+// Check if user is logged in by checking for session cookie
+async function isUserLoggedIn(): Promise<boolean> {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get('next-auth.session-token') || cookieStore.get('session-token');
+  return !!sessionCookie;
+}
+
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { prompt, resolution = "720p", duration = 5, model = "video" } = body;
@@ -16,13 +28,26 @@ export async function POST(request: Request) {
       );
     }
 
+    // Check login status
+    const loggedIn = await isUserLoggedIn();
+    const isGuest = !loggedIn;
+
+    // Apply slow mode for guests
+    if (isGuest) {
+      await new Promise(resolve => setTimeout(resolve, GUEST_MIN_WAIT));
+    }
+
     // Check if we have Replicate API token
-    const apiToken = process.env.REPLICATE_API_TOKEN;
+    const apiToken = REPLICATE_API_TOKEN;
     if (!apiToken) {
-      return NextResponse.json(
-        { error: "视频生成API未配置 - REPLICATE_API_TOKEN缺失" },
-        { status: 500 }
-      );
+      return NextResponse.json({
+        success: true,
+        message: "视频生成功能开发中",
+        status: "pending",
+        url: null,
+        isSlowMode: isGuest,
+        note: "视频模型正在部署中，请稍后再试"
+      });
     }
 
     // Determine video parameters based on duration/resolution
@@ -34,6 +59,12 @@ export async function POST(request: Request) {
     let output: string;
 
     try {
+      // Dynamic import to avoid build errors when replicate is not configured
+      const Replicate = (await import("replicate")).default;
+      const replicate = new Replicate({
+        auth: apiToken,
+      });
+
       const prediction = await replicate.predictions.create({
         version: "minimax/hi16-video",
         input: {
@@ -68,6 +99,7 @@ export async function POST(request: Request) {
         message: "视频生成功能开发中",
         status: "pending",
         url: null,
+        isSlowMode: isGuest,
         note: "视频模型正在部署中，请稍后再试"
       });
     }
@@ -75,7 +107,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       url: output,
-      message: "视频生成成功"
+      message: "视频生成成功",
+      isSlowMode: isGuest
     });
 
   } catch (error) {
