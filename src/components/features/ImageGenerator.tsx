@@ -1,4 +1,4 @@
-﻿﻿﻿'use client';
+'use client';
 
 import { useState, useRef, useEffect } from "react";
 import {
@@ -280,6 +280,13 @@ export default function ImageGenerator() {
 
               {/* Generate button */}
               <div className="flex items-center gap-2 w-full md:w-auto md:gap-3">
+                <button
+                  onClick={() => window.location.href = '/zh/ai-video-generator'}
+                  className="flex items-center gap-1.5 px-3 h-10 text-sm font-medium rounded-full border border-border/30 bg-secondary/10 text-secondary-foreground/80 hover:bg-secondary/30 transition-colors"
+                >
+                  <Clapperboard className="w-4 h-4" />
+                  <span>AI 视频生成</span>
+                </button>
                 <button
                   onClick={clearAll}
                   disabled={images.length === 0}

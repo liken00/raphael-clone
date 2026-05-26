@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { Sparkles } from "lucide-react";
 
@@ -6,18 +6,6 @@ export default function HeroSection() {
   return (
     <div data-critical-hero className="relative flex flex-col items-center justify-center text-center py-8 sm:py-16">
       <div className="w-full max-w-5xl mx-auto px-4">
-        {/* Logo + Title */}
-        <div className="flex items-center justify-center gap-3 sm:gap-4">
-          <div className="hidden sm:flex w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 items-center justify-center text-white font-bold text-lg shadow-lg">
-            M
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight [text-rendering:optimizeLegibility]">
-            <span className="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 bg-clip-text text-transparent">
-              MY AI
-            </span>
-          </h1>
-        </div>
-
         {/* Subtitle */}
         <p className="hero-lead mt-4 sm:mt-6 text-xl sm:text-2xl font-medium text-foreground/90 max-w-2xl mx-auto">
           在几秒钟内创建令人惊叹的 AI 生成图像
