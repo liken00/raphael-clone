@@ -34,6 +34,8 @@ export default function ImageGenerator() {
   const [showNegativePrompt, setShowNegativePrompt] = useState(false);
   const [negativePrompt, setNegativePrompt] = useState("");
   const [quickMode, setQuickMode] = useState(false);
+  const [remainingQuota, setRemainingQuota] = useState(10);
+  const [isSlowMode, setIsSlowMode] = useState(false);
   const promptRef = useRef<HTMLTextAreaElement>(null);
 
   // Check if user needs watermark (non-members)
@@ -56,6 +58,7 @@ export default function ImageGenerator() {
           model_id: selectedModel,
           width: resolution.width,
           height: resolution.height,
+          fastMode: quickMode,
         }),
       });
 
@@ -67,6 +70,14 @@ export default function ImageGenerator() {
 
       if (!data.output || data.output.length === 0) {
         throw new Error("No image was generated");
+      }
+
+      // Update quota and slow mode status from response
+      if (data.remainingQuota !== undefined) {
+        setRemainingQuota(data.remainingQuota);
+      }
+      if (data.isSlowMode !== undefined) {
+        setIsSlowMode(data.isSlowMode);
       }
 
       const newImages: GeneratedImage[] = data.output.map((url: string) => ({
@@ -320,6 +331,20 @@ export default function ImageGenerator() {
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">
                   <span className="w-2 h-2 rounded-full bg-blue-400" />
                   已应用水印
+                </span>
+              )}
+              {/* Slow mode badge for guests */}
+              {isSlowMode && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                  慢速模式
+                </span>
+              )}
+              {/* Quick mode quota badge for logged-in users */}
+              {isLoggedIn && remainingQuota >= 0 && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  <Zap className="w-3 h-3" />
+                  剩余 {remainingQuota} 次快速生成
                 </span>
               )}
             </div>
