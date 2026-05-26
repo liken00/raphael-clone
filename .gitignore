@@ -57,3 +57,4 @@ start-all.log
 test-server.js
 cloudflared.exe
 dev-proc.xml
+.vercel
