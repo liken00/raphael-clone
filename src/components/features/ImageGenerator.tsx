@@ -1,11 +1,13 @@
 ﻿'use client';
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Plus, ChevronDown, Zap, Download, RefreshCw,
-  Loader2, ImageIcon, AlertCircle, X
+  Loader2, ImageIcon, AlertCircle, X, Edit, Clapperboard,
+  Layers, UserCheck
 } from "lucide-react";
 import { RESOLUTION_OPTIONS, Tier, DEFAULT_TIER, TIERS } from "@/lib/tiers";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface GeneratedImage {
   id: string;
@@ -22,16 +24,21 @@ interface ResolutionOption {
 }
 
 export default function ImageGenerator() {
+  const { user, tier, tierConfig } = useAuth();
   const [prompt, setPrompt] = useState("");
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<GeneratedImage[]>([]);
   const [selectedModel, setSelectedModel] = useState("flux-schnell");
   const [resolution, setResolution] = useState<ResolutionOption>(RESOLUTION_OPTIONS[0]);
+  const [showNegativePrompt, setShowNegativePrompt] = useState(false);
+  const [negativePrompt, setNegativePrompt] = useState("");
+  const [quickMode, setQuickMode] = useState(false);
   const promptRef = useRef<HTMLTextAreaElement>(null);
 
-  // Mock user tier - replace with actual auth check
-  const userTier: Tier = DEFAULT_TIER;
+  // Check if user needs watermark (non-members)
+  const needsWatermark = tierConfig.watermark;
+  const isLoggedIn = !!user;
 
   const handleGenerate = async () => {
     const trimmed = prompt.trim();
@@ -174,7 +181,7 @@ export default function ImageGenerator() {
                     <ChevronDown className="w-3 h-3 opacity-60" />
                   </button>
                   <div className="absolute top-full left-0 mt-1 py-1 rounded-lg border border-border/60 bg-card/95 backdrop-blur-sm shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 min-w-[100px]">
-                    {RESOLUTION_OPTIONS.filter(opt => opt.tiers.includes(userTier)).map((opt) => (
+                    {RESOLUTION_OPTIONS.filter(opt => opt.tiers.includes(tier)).map((opt) => (
                       <button
                         key={opt.label}
                         onClick={() => setResolution(opt)}
@@ -211,9 +218,9 @@ export default function ImageGenerator() {
                   <button className="flex h-10 w-full min-w-[208px] items-center justify-between rounded-full border border-primary/18 bg-primary/10 px-3 text-sm font-medium text-primary outline-none transition-all duration-200 hover:bg-primary/18 md:w-[224px]">
                     <span className="flex min-w-0 items-center gap-2.5">
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/30">
-                        <span className="text-[10px] font-bold text-primary">R</span>
+                        <span className="text-[10px] font-bold text-primary">M</span>
                       </span>
-                      <span className="min-w-0 truncate">Raphael Basic</span>
+                      <span className="min-w-0 truncate">MY AI Basic</span>
                     </span>
                     <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
                   </button>
@@ -221,18 +228,24 @@ export default function ImageGenerator() {
 
                 {/* Toggles */}
                 <div className="flex items-center justify-between md:justify-start gap-3 md:gap-6 ps-1 w-full md:w-auto">
-                  <button className="flex items-center gap-2 text-sm">
-                    <span className="w-10 h-5 rounded-full p-0.5 bg-secondary">
-                      <span className="block w-4 h-4 rounded-full bg-background translate-x-0" />
+                  <button
+                    onClick={() => setQuickMode(!quickMode)}
+                    className="flex items-center gap-2 text-sm"
+                  >
+                    <span className={`w-10 h-5 rounded-full p-0.5 ${quickMode ? 'bg-primary' : 'bg-secondary'}`}>
+                      <span className={`block w-4 h-4 rounded-full bg-background ${quickMode ? 'translate-x-5' : 'translate-x-0'}`} />
                     </span>
                     <span className="text-sm flex items-center gap-1 font-medium text-muted-foreground/80">
                       <Zap className="w-3.5 h-3.5" />
                       快速模式
                     </span>
                   </button>
-                  <button className="flex items-center gap-2 text-sm">
-                    <span className="w-9 h-5 rounded-full p-0.5 bg-secondary">
-                      <span className="block w-4 h-4 rounded-full bg-background translate-x-0" />
+                  <button
+                    onClick={() => setShowNegativePrompt(!showNegativePrompt)}
+                    className="flex items-center gap-2 text-sm"
+                  >
+                    <span className={`w-9 h-5 rounded-full p-0.5 ${showNegativePrompt ? 'bg-primary' : 'bg-secondary'}`}>
+                      <span className={`block w-4 h-4 rounded-full bg-background ${showNegativePrompt ? 'translate-x-4' : 'translate-x-0'}`} />
                     </span>
                     <span className="text-sm text-muted-foreground/80">负面提示词</span>
                   </button>
@@ -288,12 +301,28 @@ export default function ImageGenerator() {
       {images.length > 0 && (
         <div className="w-full mx-auto">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-foreground">
-              生成结果
-              <span className="ml-2 text-sm font-normal text-muted-foreground">
-                ({images.length} 张)
-              </span>
-            </h3>
+            <div className="flex items-center gap-3">
+              <h3 className="text-lg font-semibold text-foreground">
+                生成结果
+                <span className="ml-2 text-sm font-normal text-muted-foreground">
+                  ({images.length} 张)
+                </span>
+              </h3>
+              {/* Login speed badge */}
+              {!isLoggedIn && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                  <Zap className="w-3 h-3" />
+                  登录以获得更快速度
+                </span>
+              )}
+              {/* Watermark badge for non-members */}
+              {needsWatermark && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                  <span className="w-2 h-2 rounded-full bg-blue-400" />
+                  已应用水印
+                </span>
+              )}
+            </div>
             <button
               onClick={clearAll}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -317,6 +346,16 @@ export default function ImageGenerator() {
                       (e.target as HTMLImageElement).src = `https://placehold.co/512x512/2a1f15/c08b52?text=Error`;
                     }}
                   />
+                  {/* Watermark overlay for non-members */}
+                  {needsWatermark && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="transform rotate-[-30deg] opacity-30">
+                        <span className="text-white text-2xl font-bold tracking-widest whitespace-nowrap">
+                          myai.com
+                        </span>
+                      </div>
+                    </div>
+                  )}
                   {/* Overlay on hover */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-end p-3">
                     <p className="text-white text-xs line-clamp-2 mb-2 leading-relaxed">
@@ -345,6 +384,27 @@ export default function ImageGenerator() {
                   <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium bg-black/50 text-white/80 backdrop-blur-sm">
                     {img.model}
                   </span>
+                </div>
+                {/* Action buttons below image */}
+                <div className="p-2 bg-secondary/20 border-t border-border/10">
+                  <div className="flex items-center justify-center gap-1">
+                    <button className="flex items-center gap-1 px-2 py-1 rounded text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors">
+                      <Edit className="w-3 h-3" />
+                      编辑
+                    </button>
+                    <button className="flex items-center gap-1 px-2 py-1 rounded text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors">
+                      <Clapperboard className="w-3 h-3" />
+                      制作动画
+                    </button>
+                    <button className="flex items-center gap-1 px-2 py-1 rounded text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors">
+                      <Layers className="w-3 h-3" />
+                      在画布中编辑
+                    </button>
+                    <button className="flex items-center gap-1 px-2 py-1 rounded text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors">
+                      <UserCheck className="w-3 h-3" />
+                      对口型
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

@@ -33,7 +33,7 @@ export default function GallerySection() {
       <div className="flex flex-col items-center gap-4">
         <h2 className="text-center text-4xl font-semibold">获取灵感</h2>
         <p className="text-center text-muted-foreground lg:text-lg">
-          从 Raphael 的创作中获取灵感
+          从 MY AI 的创作中获取灵感
         </p>
       </div>
       <div className="mt-16 columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
