@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check localStorage for persisted user session
-    const stored = localStorage.getItem('raphael_user');
+    const stored = localStorage.getItem('myai_user');
     if (stored) {
       try {
         setUser(JSON.parse(stored));
@@ -57,9 +57,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem('raphael_user', JSON.stringify(user));
+      localStorage.setItem('myai_user', JSON.stringify(user));
     } else {
-      localStorage.removeItem('raphael_user');
+      localStorage.removeItem('myai_user');
     }
   }, [user]);
 

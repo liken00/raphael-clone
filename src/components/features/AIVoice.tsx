@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from "react";
 import {
@@ -123,7 +123,7 @@ export default function AIVoice() {
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = blobUrl;
-      a.download = `raphael-voice-${Date.now()}.mp3`;
+      a.download = `myai-voice-${Date.now()}.mp3`;
       a.click();
       URL.revokeObjectURL(blobUrl);
     } catch {

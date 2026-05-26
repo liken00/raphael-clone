@@ -1,4 +1,4 @@
-﻿'use client';
+﻿﻿﻿'use client';
 
 import { useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
@@ -15,8 +15,15 @@ const styles = [
   { name: "Holiday portrait", img: "/images/quick-i2i/holiday-portrait.webp" },
   { name: "Dramatic", img: "/images/quick-i2i/dramatic_v2.webp" },
   { name: "Plushie", img: "/images/quick-i2i/plushie_v2.webp" },
+  { name: "Baseball bobblehead", img: "/images/quick-i2i/baseball-bobblehead.webp" },
+  { name: "3D glam doll", img: "/images/quick-i2i/style_3d_glam_doll.webp" },
   { name: "Doodle", img: "/images/quick-i2i/doodle_v2.webp" },
   { name: "Inkwork", img: "/images/quick-i2i/inkwork.webp" },
+  { name: "Fisheye", img: "/images/quick-i2i/fisheye.webp" },
+  { name: "Pop art", img: "/images/quick-i2i/pop-art.webp" },
+  { name: "Ornament", img: "/images/quick-i2i/ornament.webp" },
+  { name: "Sugar cookie", img: "/images/quick-i2i/sugar-cookie.webp" },
+  { name: "Art school", img: "/images/quick-i2i/art-school.webp" },
 ];
 
 const discoveries = [
@@ -25,6 +32,13 @@ const discoveries = [
   { name: "Me as The Girl with a Pearl", img: "/images/quick-i2i/me-as-the-girl-with-a-pearl.webp" },
   { name: "Create an album cover", img: "/images/quick-i2i/create-an-album-cover.webp" },
   { name: "Style me", img: "/images/quick-i2i/style-me.webp" },
+  { name: "Create a professional product photo", img: "/images/quick-i2i/create-a-professional-product-photo.webp" },
+  { name: "Redecorate my room", img: "/images/quick-i2i/redecorate-my-room.webp" },
+  { name: "Give us a matching outfit", img: "/images/quick-i2i/give-us-a-matching-outfit.webp" },
+  { name: "Create a professional job photo", img: "/images/quick-i2i/create-a-professional-job-photo.webp" },
+  { name: "Remove people in the background", img: "/images/quick-i2i/remove-people-in-the-background.webp" },
+  { name: "Restore an old photo", img: "/images/quick-i2i/restore-an-old-photo.webp" },
+  { name: "Turn into a keychain", img: "/images/quick-i2i/turn-into-a-keychain.webp" },
 ];
 
 export default function GallerySection() {

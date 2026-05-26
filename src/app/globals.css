@@ -1,68 +1,255 @@
+﻿/* ============================================================
+   RAPHAEL AI — 未来主义设计系统
+   赛博玻璃态 + 霓虹渐变 + 微交互动画
+   ============================================================ */
+
 @import "tailwindcss";
 
+/* ---- 设计令牌 ---- */
 @theme inline {
-  --color-background: hsl(222, 47%, 6%);
+  /* 核心色板 - 赛博紫 + 冰蓝 + 暗夜 */
+  --color-background: hsl(240, 15%, 4%);
   --color-foreground: hsl(210, 40%, 98%);
   --color-primary: hsl(262, 83%, 65%);
   --color-primary-foreground: hsl(0, 0%, 100%);
-  --color-border: hsl(262, 30%, 20%);
-  --color-secondary: hsl(262, 30%, 12%);
-  --color-secondary-foreground: hsl(210, 40%, 98%);
-  --color-muted: hsl(262, 25%, 10%);
-  --color-muted-foreground: hsl(262, 20%, 60%);
-  --color-accent: hsl(262, 40%, 15%);
-  --color-accent-foreground: hsl(210, 40%, 98%);
-  --color-card: hsl(262, 30%, 9%);
+  --color-primary-light: hsl(262, 100%, 75%);
+  --color-primary-dark: hsl(262, 70%, 50%);
+  --color-secondary: hsl(195, 85%, 50%);
+  --color-secondary-foreground: hsl(0, 0%, 100%);
+  --color-accent: hsl(280, 70%, 55%);
+  --color-accent-foreground: hsl(0, 0%, 100%);
+  --color-border: hsla(262, 30%, 30%, 0.3);
+  --color-border-light: hsla(262, 30%, 40%, 0.15);
+
+  /* 表面色 - 玻璃态 */
+  --color-surface: hsla(240, 20%, 10%, 0.6);
+  --color-surface-hover: hsla(240, 20%, 15%, 0.8);
+  --color-card: hsla(240, 20%, 8%, 0.5);
+  --color-card-hover: hsla(240, 20%, 12%, 0.7);
   --color-card-foreground: hsl(210, 40%, 98%);
-  --color-ring: hsl(262, 83%, 65%);
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --color-muted: hsla(240, 15%, 12%, 0.8);
+  --color-muted-foreground: hsla(210, 20%, 70%, 0.8);
+
+  /* 霓虹色 */
+  --color-neon-purple: hsl(262, 100%, 65%);
+  --color-neon-cyan: hsl(195, 100%, 55%);
+  --color-neon-pink: hsl(320, 100%, 60%);
+  --color-neon-blue: hsl(220, 100%, 60%);
+  --color-neon-green: hsl(150, 100%, 50%);
+  --color-neon-amber: hsl(45, 100%, 55%);
+
+  /* 语义色 */
+  --color-success: hsl(150, 80%, 50%);
+  --color-warning: hsl(45, 90%, 55%);
+  --color-error: hsl(0, 80%, 55%);
+  --color-info: hsl(220, 80%, 55%);
+
+  /* 圆角 */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+
+  /* 动画 */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out-quad: cubic-bezier(0.45, 0, 0.55, 1);
+
+  /* 字体 */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "SF Pro Display", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 :root { color-scheme: dark; }
 
+/* ---- 全局基础 ---- */
 body {
-  background: linear-gradient(135deg, hsl(222, 47%, 6%) 0%, hsl(262, 47%, 8%) 50%, hsl(195, 47%, 6%) 100%);
+  background: hsl(240, 15%, 4%);
+  background-image:
+    radial-gradient(ellipse at 20% 50%, hsla(262, 80%, 50%, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, hsla(195, 80%, 50%, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, hsla(320, 80%, 50%, 0.05) 0%, transparent 50%);
   background-attachment: fixed;
   color: hsl(210, 40%, 98%);
   margin: 0;
   min-height: 100vh;
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
-/* Gradient text utility */
-.bg-gradient-tech {
-  background: linear-gradient(135deg, hsl(262, 83%, 65%) 0%, hsl(195, 83%, 60%) 50%, hsl(262, 83%, 65%) 100%);
+/* ---- 滚动条 ---- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsla(262, 50%, 50%, 0.4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsla(262, 60%, 60%, 0.6); }
+
+/* ---- 渐变文字工具类 ---- */
+.gradient-text {
+  background: linear-gradient(135deg, hsl(262, 100%, 70%) 0%, hsl(195, 100%, 60%) 50%, hsl(320, 100%, 65%) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.bg-gradient-tech-warm {
-  background: linear-gradient(135deg, hsl(262, 83%, 65%) 0%, hsl(280, 83%, 60%) 50%, hsl(195, 83%, 55%) 100%);
+.gradient-text-cyan {
+  background: linear-gradient(135deg, hsl(195, 100%, 60%) 0%, hsl(220, 100%, 65%) 50%, hsl(262, 100%, 70%) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.bg-gradient-cyber {
-  background: linear-gradient(135deg, hsl(195, 100%, 50%) 0%, hsl(262, 83%, 65%) 50%, hsl(280, 100%, 60%) 100%);
+.gradient-text-warm {
+  background: linear-gradient(135deg, hsl(262, 100%, 70%) 0%, hsl(320, 100%, 65%) 50%, hsl(45, 100%, 60%) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+/* ---- 玻璃卡片 ---- */
+.glass {
+  background: hsla(240, 20%, 10%, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid hsla(262, 30%, 30%, 0.15);
+}
+
+.glass-strong {
+  background: hsla(240, 20%, 12%, 0.7);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid hsla(262, 30%, 40%, 0.2);
+}
+
+.glass-hover:hover {
+  background: hsla(240, 20%, 15%, 0.6);
+  border-color: hsla(262, 40%, 50%, 0.3);
+}
+
+/* ---- 霓虹发光边框 ---- */
+.neon-border {
+  position: relative;
+}
+
+.neon-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, hsl(262, 100%, 65%), hsl(195, 100%, 55%), hsl(320, 100%, 60%));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.neon-border-cyan::before {
+  background: linear-gradient(135deg, hsl(195, 100%, 55%), hsl(220, 100%, 60%));
+}
+
+/* ---- 霓虹发光效果 ---- */
+.glow-purple { box-shadow: 0 0 20px hsla(262, 100%, 65%, 0.3), 0 0 40px hsla(262, 100%, 65%, 0.1); }
+.glow-cyan { box-shadow: 0 0 20px hsla(195, 100%, 55%, 0.3), 0 0 40px hsla(195, 100%, 55%, 0.1); }
+.glow-pink { box-shadow: 0 0 20px hsla(320, 100%, 60%, 0.3), 0 0 40px hsla(320, 100%, 60%, 0.1); }
+
+/* ---- 网格背景 ---- */
+.bg-grid {
+  background-image:
+    linear-gradient(hsla(262, 30%, 30%, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, hsla(262, 30%, 30%, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.bg-grid-dense {
+  background-image:
+    linear-gradient(hsla(262, 30%, 30%, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, hsla(262, 30%, 30%, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ---- 点阵背景 ---- */
+.bg-dots {
+  background-image: radial-gradient(hsla(262, 50%, 60%, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ---- 动画关键帧 ---- */
+
+/* 霓虹呼吸 */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px hsla(262, 100%, 65%, 0.3), 0 0 40px hsla(262, 100%, 65%, 0.1); }
+  50% { box-shadow: 0 0 30px hsla(262, 100%, 65%, 0.5), 0 0 60px hsla(262, 100%, 65%, 0.2); }
+}
+.animate-glow-pulse { animation: glow-pulse 3s var(--ease-in-out-quad) infinite; }
+
+/* 渐变移动 */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient { background-size: 200% 200%; animation: gradient-shift 8s ease infinite; }
+
+/* 浮动 */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: float-slow 6s var(--ease-in-out-quad) infinite; }
+
+/* 向上淡入 */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fade-in-up 0.6s var(--ease-out-expo) forwards; }
+
+/* 缩放淡入 */
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-scale-in { animation: scale-in 0.4s var(--ease-spring) forwards; }
+
+/* 旋转加载 */
+@keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.animate-spin-slow { animation: spin-slow 3s linear infinite; }
+
+/* 导航徽章闪烁 */
+@keyframes badge-shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-badge-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, hsla(0, 0%, 100%, 0.3), transparent);
+  animation: badge-shine 3s ease-in-out infinite;
+}
+
+/* 光标闪烁 */
 @keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-@keyframes scroll { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
-@keyframes nav-badge-shine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-@keyframes glow-pulse { 0%, 100% { box-shadow: 0 0 20px hsl(262, 83%, 65% / 0.3); } 50% { box-shadow: 0 0 40px hsl(262, 83%, 65% / 0.5); } }
+.animate-cursor { animation: cursor-blink 1s step-end infinite; }
 
-.animate-scroll { animation: scroll linear infinite; }
-.animate-cursor-blink { animation: cursor-blink 1s step-end infinite; }
-.animate-nav-badge-shine { animation: nav-badge-shine 3s ease-in-out infinite; }
-.animate-glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
+/* 粒子飘落 */
+@keyframes particle-drift {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+}
 
+/* 滚动条隐藏 */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ---- 文本选择 ---- */
+::selection { background: hsla(262, 80%, 60%, 0.3); color: white; }
+
+/* ---- 焦点样式 ---- */
+*:focus-visible { outline: 2px solid hsl(262, 80%, 65%); outline-offset: 2px; border-radius: 4px; }

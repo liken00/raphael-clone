@@ -1,4 +1,4 @@
-'use client';
+﻿﻿'use client';
 
 import { useState } from "react";
 import {
@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const VIDEO_PLANS = [
   {
     id: "basic",
-    name: "Raphael Video",
+    name: "MY AI Video",
     tier: "基础",
     resolution: "480P-720P",
     duration: "5秒",
@@ -20,7 +20,7 @@ const VIDEO_PLANS = [
   },
   {
     id: "plus",
-    name: "Raphael Video Plus",
+    name: "MY AI Video Plus",
     tier: "进阶",
     resolution: "480P-720P",
     duration: "4-12秒",
@@ -30,7 +30,7 @@ const VIDEO_PLANS = [
   },
   {
     id: "pro",
-    name: "Raphael Video Pro",
+    name: "MY AI Video Pro",
     tier: "专业",
     resolution: "480P-720P",
     duration: "4-12秒",
@@ -91,7 +91,7 @@ export default function VideoGenerator() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || `Request failed (${res.status})`);
+        throw new Error(data.error || "Request failed (" + res.status + ")");
       }
 
       // Update slow mode status from response
@@ -147,7 +147,7 @@ export default function VideoGenerator() {
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = blobUrl;
-      a.download = `raphael-video-${Date.now()}.mp4`;
+      a.download = `myai-video-${Date.now()}.mp4`;
       a.click();
       URL.revokeObjectURL(blobUrl);
     } catch {
@@ -163,9 +163,9 @@ export default function VideoGenerator() {
   const currentPlan = VIDEO_PLANS.find(p => p.id === selectedPlan) || VIDEO_PLANS[1];
 
   const planLabels = {
-    "basic": "Raphael Video (基础)",
-    "plus": "Raphael Video Plus (进阶)",
-    "pro": "Raphael Video Pro (专业)",
+    "basic": "MY AI Video (基础)",
+    "plus": "MY AI Video Plus (进阶)",
+    "pro": "MY AI Video Pro (专业)",
   };
 
   return (

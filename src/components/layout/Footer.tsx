@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+﻿﻿import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -30,7 +30,7 @@ export default function Footer() {
                     <Link href="/zh/pricing">定价</Link>
                   </li>
                   <li className="font-medium hover:text-primary">
-                    <Link href="/partners">合作伙伴</Link>
+                    <Link href="/zh/partners">合作伙伴</Link>
                   </li>
                 </ul>
               </div>

@@ -1,4 +1,4 @@
-﻿'use client';
+﻿﻿﻿'use client';
 
 import { useState } from "react";
 import { Check, Sparkles } from "lucide-react";
@@ -11,7 +11,7 @@ const plans = [
     description: "适合初次尝试 AI 图像生成",
     features: [
       "每日 10 次生成",
-      "Raphael Basic 模型",
+      "MY AI Basic 模型",
       "标准队列",
       "基础分辨率",
       "社区许可",
@@ -27,7 +27,7 @@ const plans = [
     description: "海外专享 30 倍利润品质保证",
     features: [
       "每月 2,000 点数",
-      "所有 Raphael 模型",
+      "所有 MY AI 模型",
       "优先队列",
       "高清分辨率",
       "商业许可",
@@ -45,7 +45,7 @@ const plans = [
     description: "海外专享 30 倍利润品质保证",
     features: [
       "每月 5,000 点数",
-      "所有 Raphael 模型",
+      "所有 MY AI 模型",
       "最快渲染队列",
       "最高分辨率",
       "商业许可",
@@ -60,11 +60,35 @@ const plans = [
   },
 ];
 
+// Checkout handler
+const handleCheckout = async (planName: string, interval: string) => {
+  if (planName === 'free') {
+    window.location.href = '/zh/login';
+    return;
+  }
+  const planKey = planName === 'pro' ? 'pro' : 'ultimate';
+  try {
+    const res = await fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan: planKey, interval }),
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else if (data.success && data.mock) {
+      window.location.href = data.url;
+    }
+  } catch (err) {
+    console.error('Checkout error:', err);
+  }
+};
+
 const faqItems = [
   { q: "可以随时取消或更改套餐吗？", a: "是的，您可以随时取消订阅或更改套餐。取消后，点数将在当前计费周期结束时过期。" },
   { q: "未使用的点数会累积到下一月吗？", a: "点数仅限当月使用，不会结转到下个月。我们建议选择适合您使用量的套餐。" },
-  { q: "免费用户有功能限制吗？", a: "免费用户每天获得 10 点数，可使用 Raphael Basic 模型。升级后可解锁更多模型、更高分辨率和优先队列。" },
-  { q: "如何获取退款？", a: "如果您对服务不满意，可以在购买后 7 天内联系 support@raphael.app 申请全额退款。" },
+  { q: "免费用户有功能限制吗？", a: "免费用户每天获得 10 点数，可使用 MY AI Basic 模型。升级后可解锁更多模型、更高分辨率和优先队列。" },
+  { q: "如何获取退款？", a: "如果您对服务不满意，可以在购买后 7 天内联系 support@myai.app 申请全额退款。" },
 ];
 
 export default function PricingClient() {
@@ -190,7 +214,7 @@ export default function PricingClient() {
             <tbody>
               {[
                 ["月生成量", "300", "2,000", "5,000"],
-                ["可用模型", "Raphael Basic", "所有模型", "所有模型"],
+                ["可用模型", "MY AI Basic", "所有模型", "所有模型"],
                 ["渲染队列", "标准", "优先", "最快"],
                 ["分辨率", "基础", "高清", "最高"],
                 ["水印", "有", "无", "无"],

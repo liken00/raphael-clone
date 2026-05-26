@@ -81,7 +81,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const email = credentials?.email as string;
         const password = credentials?.password as string;
 
-        if (email === "demo@raphael.app" && password === "demo1234") {
+        if (email === "demo@myai.app" && password === "demo1234") {
           return {
             id: "1",
             email,

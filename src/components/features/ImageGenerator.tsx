@@ -1,4 +1,4 @@
-﻿﻿'use client';
+﻿﻿﻿'use client';
 
 import { useState, useRef, useEffect } from "react";
 import {
@@ -124,7 +124,7 @@ export default function ImageGenerator() {
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = blobUrl;
-      a.download = `raphael-ai-${Date.now()}-${index}.png`;
+      a.download = `myai-ai-${Date.now()}-${index}.png`;
       a.click();
       URL.revokeObjectURL(blobUrl);
     } catch {

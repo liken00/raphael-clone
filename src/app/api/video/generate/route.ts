@@ -1,115 +1,124 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+﻿import { NextRequest, NextResponse } from "next/server";
 
-// Video generation using Replicate API
-// Model: minimax-ai/hi16-video (or similar available model)
-
-const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN;
-
-// Guest users get slow mode (minimum wait time in ms)
-const GUEST_MIN_WAIT = 3000; // 3 seconds slow mode for guests
-
-// Check if user is logged in by checking for session cookie
-async function isUserLoggedIn(): Promise<boolean> {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('next-auth.session-token') || cookieStore.get('session-token');
-  return !!sessionCookie;
-}
+const WANXIANG_API_KEY = process.env.WANXIANG_API_KEY || "";
+const WANXIANG_TASK_URL = "https://dashscope.aliyuncs.com/api/v1/tasks";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { prompt, resolution = "720p", duration = 5, model = "video" } = body;
+    const { prompt, plan } = body;
 
-    if (!prompt) {
+    if (!prompt || typeof prompt !== "string") {
+      return NextResponse.json({ error: "请输入视频描述" }, { status: 400 });
+    }
+
+    if (!WANXIANG_API_KEY) {
       return NextResponse.json(
-        { error: "请提供视频描述" },
-        { status: 400 }
+        { error: "视频生成 API 未配置" },
+        { status: 500 }
       );
     }
 
-    // Check login status
-    const loggedIn = await isUserLoggedIn();
-    const isGuest = !loggedIn;
+    // Call Wanxiang video generation API
+    const createResponse = await fetch(
+      "https://dashscope.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis",
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + WANXIANG_API_KEY,
+          "Content-Type": "application/json",
+          "X-DashScope-Async": "enable",
+        },
+        body: JSON.stringify({
+          model: "wanx2.1-t2v-turbo",
+          input: {
+            prompt: prompt,
+          },
+          parameters: {
+            size: "1280*720",
+            duration: 5,
+          },
+        }),
+      }
+    );
 
-    // Apply slow mode for guests
-    if (isGuest) {
-      await new Promise(resolve => setTimeout(resolve, GUEST_MIN_WAIT));
+    if (!createResponse.ok) {
+      const errorText = await createResponse.text();
+      console.error("Wanxiang video create error:", errorText);
+      return NextResponse.json(
+        { error: "视频生成任务创建失败" },
+        { status: 500 }
+      );
     }
 
-    // Check if we have Replicate API token
-    const apiToken = REPLICATE_API_TOKEN;
-    if (!apiToken) {
-      return NextResponse.json({
-        success: true,
-        message: "视频生成功能开发中",
-        status: "pending",
-        url: null,
-        isSlowMode: isGuest,
-        note: "视频模型正在部署中，请稍后再试"
-      });
+    const taskData = await createResponse.json();
+    const taskId = taskData.output?.task_id;
+
+    if (!taskId) {
+      console.error("Wanxiang video response missing task_id:", taskData);
+      return NextResponse.json(
+        { error: "视频生成服务响应异常" },
+        { status: 500 }
+      );
     }
 
-    // Determine video parameters based on duration/resolution
-    const numFrames = duration === "short" ? 60 : duration === "long" ? 180 : 120;
-    const resolutionSetting = resolution === "1080p" ? "1920x1080" : "1280x720";
+    // Poll for completion with timeout
+    const maxWaitTime = 180000; // 3 minutes
+    const pollInterval = 5000; // 5 seconds
+    const startTime = Date.now();
 
-    // Use Replicate to run video generation
-    // Using minimax-ai/hi16-video model which is a stable video generation model
-    let output: string;
-
-    try {
-      // Dynamic import to avoid build errors when replicate is not configured
-      const Replicate = (await import("replicate")).default;
-      const replicate = new Replicate({
-        auth: apiToken,
-      });
-
-      const prediction = await replicate.predictions.create({
-        version: "minimax/hi16-video",
-        input: {
-          prompt: prompt,
-          num_frames: numFrames,
-          resolution: resolutionSetting,
+    while (Date.now() - startTime < maxWaitTime) {
+      const pollResponse = await fetch(WANXIANG_TASK_URL + "/" + taskId, {
+        headers: {
+          Authorization: "Bearer " + WANXIANG_API_KEY,
+          "Content-Type": "application/json",
         },
       });
 
-      // Poll for completion
-      let predictionResult = await replicate.predictions.get(prediction.id);
-      
-      while (predictionResult.status !== "succeeded" && predictionResult.status !== "failed") {
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-        predictionResult = await replicate.predictions.get(prediction.id);
-      }
-
-      if (predictionResult.status === "failed") {
+      if (!pollResponse.ok) {
+        const pollError = await pollResponse.text();
+        console.error("Poll error:", pollError);
         return NextResponse.json(
-          { error: "视频生成失败，请稍后重试" },
+          { error: "查询视频生成状态失败" },
           { status: 500 }
         );
       }
 
-      output = predictionResult.output as string;
-    } catch (replicateError) {
-      console.error("Replicate API error:", replicateError);
-      
-      // Fallback: return a graceful message if model is not available
-      return NextResponse.json({
-        success: true,
-        message: "视频生成功能开发中",
-        status: "pending",
-        url: null,
-        isSlowMode: isGuest,
-        note: "视频模型正在部署中，请稍后再试"
-      });
+      const updatedTask = await pollResponse.json();
+      const taskStatus = updatedTask.output?.task_status;
+
+      if (taskStatus === "SUCCEEDED") {
+        const results = updatedTask.output?.results || [];
+        const videoUrl = results[0]?.video_url || results[0]?.url || "";
+        if (videoUrl) {
+          return NextResponse.json({
+            success: true,
+            url: videoUrl,
+            message: "视频生成成功",
+          });
+        }
+        return NextResponse.json(
+          { error: "生成成功但未获取到视频链接" },
+          { status: 500 }
+        );
+      }
+
+      if (taskStatus === "FAILED") {
+        const failMsg = updatedTask.output?.message || "视频生成失败";
+        return NextResponse.json(
+          { error: failMsg },
+          { status: 500 }
+        );
+      }
+
+      // Wait before polling again
+      await new Promise((resolve) => setTimeout(resolve, pollInterval));
     }
 
-    return NextResponse.json({
-      success: true,
-      url: output,
-      message: "视频生成成功",
-      isSlowMode: isGuest
-    });
+    return NextResponse.json(
+      { error: "视频生成超时，请稍后重试" },
+      { status: 504 }
+    );
 
   } catch (error) {
     console.error("Video generation error:", error);
