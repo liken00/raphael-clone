@@ -4,10 +4,18 @@ import { useState } from "react";
 import Link from "next/link";
 import { Globe, LogIn, Menu, X, ChevronDown } from "lucide-react";
 import { useLocale } from "next-intl";
+import { usePathname } from "@/i18n/routing";
 
 function LanguageSelector() {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  const switchLocalePath = (newLocale) => {
+    const segments = pathname.split("/");
+    segments[1] = newLocale;
+    return segments.join("/") || "/" + newLocale;
+  };
 
   const labels: Record<string, string> = { zh: "简体中文", en: "English" };
 
@@ -26,7 +34,7 @@ function LanguageSelector() {
           {["zh", "en"].map((l) => (
             <Link
               key={l}
-              href={`/${l}`}
+              href={switchLocalePath(l)}
               className={`block px-3 py-2 text-sm rounded-md hover:bg-zinc-800 ${
                 locale === l ? "text-amber-400" : "text-zinc-400"
               }`}
@@ -68,6 +76,9 @@ export default function Navbar() {
             <Link href={`/${locale}/ai-voice-clone`} className="text-sm text-zinc-400 hover:text-white transition-colors">
               声音克隆
             </Link>
+            <Link href={`/${locale}/models`} className="text-sm text-zinc-400 hover:text-white transition-colors">
+              模型架构
+            </Link>
           </div>
 
           {/* Right: Language + Login */}
@@ -99,6 +110,9 @@ export default function Navbar() {
             </Link>
             <Link href={`/${locale}/ai-voice-clone`} className="block text-sm text-zinc-400 hover:text-white py-2">
               声音克隆
+            </Link>
+            <Link href={`/${locale}/models`} className="block text-sm text-zinc-400 hover:text-white py-2">
+              模型架构
             </Link>
           </div>
         )}

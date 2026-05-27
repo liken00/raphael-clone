@@ -31,7 +31,7 @@
       "color": "No color",
       "lighting": "No lighting",
       "composition": "No composition",
-      "modelLabel": "Raphael Basic",
+      "modelLabel": "MY AI Basic",
       "fastMode": "Fast Mode",
       "negativePrompt": "Negative Prompt",
       "generate": "Generate",
@@ -41,7 +41,7 @@
     },
     "gallery": {
       "title": "Get Inspired",
-      "subtitle": "Get inspired by Raphael's creations",
+      "subtitle": "Get inspired by MY AI's creations",
       "tryStyle": "Try a Style",
       "discover": "Discover"
     },

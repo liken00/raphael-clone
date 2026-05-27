@@ -143,7 +143,7 @@ export default function VideoGenerator() {
 
   const handleDownload = async (url: string) => {
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, { mode: "cors" });
       const blob = await res.blob();
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -379,7 +379,16 @@ export default function VideoGenerator() {
                       controls
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        (e.target as HTMLVideoElement).poster = "";
+                        // Video failed to load - show fallback message
+                        const el = e.target as HTMLVideoElement;
+                        el.style.display = "none";
+                        const parent = el.parentElement;
+                        if (parent) {
+                          const fallback = document.createElement("div");
+                          fallback.className = "w-full h-full flex flex-col items-center justify-center text-white/50 text-sm p-4 text-center";
+                          fallback.innerHTML = "预览不可用<br/><span style=\"font-size:11px;opacity:0.6\">点击下载按钮在新窗口打开</span>";
+                          parent.appendChild(fallback);
+                        }
                       }}
                     />
                   ) : (

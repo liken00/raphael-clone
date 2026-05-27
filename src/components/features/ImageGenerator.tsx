@@ -24,6 +24,8 @@ const RANDOM_PROMPTS = [
   "A magical forest with floating particles, soft volumetric light streaming through the canopy, enchanted atmosphere...",
 ];
 
+const STYLE_VARIANTS = ["", ", cinematic lighting, dramatic composition", ", vibrant colors, artistic style, beautiful details", ", soft lighting, dreamy atmosphere, ethereal mood", ", hyper-realistic, sharp focus, 8k resolution", ", minimalist, clean composition, modern aesthetic", ", warm tones, cozy atmosphere, natural lighting", ", moody atmosphere, dramatic shadows, film noir",];
+
 interface GeneratedImage {
   id: string;
   url: string;
@@ -40,6 +42,7 @@ export default function ImageGenerator() {
   const [selectedPlan, setSelectedPlan] = useState<string>("basic");
   const [showPlanMenu, setShowPlanMenu] = useState(false);
   const [isSlowMode, setIsSlowMode] = useState(false);
+  const [imageCount, setImageCount] = useState(3);
 
   const handleGenerate = async () => {
     const trimmed = prompt.trim();
@@ -49,59 +52,52 @@ export default function ImageGenerator() {
     setError(null);
 
     const plan = IMAGE_PLANS.find(p => p.id === selectedPlan) || IMAGE_PLANS[0];
+    const count = Math.min(Math.max(imageCount, 1), 4);
 
     try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: trimmed,
-          model_id: "nano-banana-2",
-          width: 1024,
-          height: 1024,
-        }),
-      });
+      const promises = [];
+      for (let i = 0; i < count; i++) {
+        const variationPrompt = count > 1
+          ? trimmed + STYLE_VARIANTS[(i + 1) % STYLE_VARIANTS.length]
+          : trimmed;
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "生成失败 (" + res.status + ")");
+        promises.push(
+          fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt: variationPrompt,
+              model_id: "nano-banana-2",
+              width: 1024,
+              height: 1024,
+            }),
+          }).then(async (res) => {
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "fail");
+            if (data.isSlowMode !== undefined) setIsSlowMode(data.isSlowMode);
+            const imageUrl = (data.output && data.output[0]) || data.url || "";
+            return { url: imageUrl, prompt: variationPrompt };
+          }).catch((err) => {
+            return { url: "", prompt: variationPrompt, error: err.message };
+          })
+        );
       }
 
-      // Update slow mode status from response
-      if (data.isSlowMode !== undefined) {
-        setIsSlowMode(data.isSlowMode);
-      }
-
-      // Handle pending/development status
-      if (data.status === "pending" || !data.output || data.output.length === 0) {
-        const newImage: GeneratedImage = {
-          id: crypto.randomUUID(),
-          url: "",
-          prompt: trimmed,
-          plan: plan.name,
-        };
-        setImages((prev) => [newImage, ...prev]);
-        return;
-      }
-
-      const imageUrl = data.output[0] || data.url || "";
-      const newImage: GeneratedImage = {
+      const results = await Promise.all(promises);
+      const newImages = results.map((r) => ({
         id: crypto.randomUUID(),
-        url: imageUrl,
-        prompt: trimmed,
+        url: r.url,
+        prompt: r.prompt,
         plan: plan.name,
-      };
+      }));
 
-      setImages((prev) => [newImage, ...prev]);
+      setImages((prev) => [...newImages, ...prev]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "生成失败，请重试");
+      setError(err instanceof Error ? err.message : "fail");
     } finally {
       setGenerating(false);
     }
-  };
-
-  const handleRandomPrompt = () => {
+  };const handleRandomPrompt = () => {
     const randomPrompt = RANDOM_PROMPTS[Math.floor(Math.random() * RANDOM_PROMPTS.length)];
     setPrompt(randomPrompt);
   };
@@ -252,6 +248,22 @@ export default function ImageGenerator() {
 
               {/* Generate button */}
               <div className="flex items-center gap-2 w-full md:w-auto md:gap-3">
+                {/* Image count selector */}
+                <div className="flex items-center gap-1 bg-secondary/50 rounded-full px-1 py-1 border border-border/40">
+                  {[1, 2, 3, 4].map((n) => (
+                    <button
+                      key={n}
+                      onClick={() => setImageCount(n)}
+                      className={[
+                        "w-7 h-7 rounded-full text-xs font-medium transition-all",
+                        imageCount === n ? "bg-primary text-primary-foreground" : "text-foreground/60 hover:text-foreground hover:bg-secondary/80"
+                      ].join(" ")}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+
                 <button
                   onClick={clearAll}
                   disabled={images.length === 0}
@@ -271,7 +283,7 @@ export default function ImageGenerator() {
                     </div>
                   ) : (
                     <div className="flex items-center justify-center gap-2">
-                      生成图像
+                      {imageCount > 1 ? "生成 " + imageCount + " 张" : "生成图像"}
                       <span className="inline-flex px-1.5 py-0.5 rounded-full text-xs font-medium bg-amber-500 text-white">
                         {currentPlan.credits}
                       </span>

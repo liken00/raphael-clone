@@ -31,7 +31,7 @@
       "color": "无色彩",
       "lighting": "无光照",
       "composition": "无构图",
-      "modelLabel": "Raphael Basic",
+      "modelLabel": "MY AI Basic",
       "fastMode": "快速模式",
       "negativePrompt": "负面提示词",
       "generate": "生成",
@@ -41,7 +41,7 @@
     },
     "gallery": {
       "title": "获取灵感",
-      "subtitle": "从 Raphael 的创作中获取灵感",
+      "subtitle": "从 MY AI 的创作中获取灵感",
       "tryStyle": "尝试一种风格",
       "discover": "发现新内容"
     },
