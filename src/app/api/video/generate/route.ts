@@ -8,7 +8,7 @@ const DEMO_VIDEOS = [
   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
 ];
 
-export async function POST(request) {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { prompt } = body;
